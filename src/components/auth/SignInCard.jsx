@@ -13,6 +13,7 @@ export default function SignInCard({ onLogin, onSuccess }) {
   const [message, setMessage] = useState('')
   const [loading, setLoading] = useState(false)
   const needsCaptcha = fails >= 3
+  const ownerEmail = (import.meta.env.VITE_OWNER_EMAIL || '').toLowerCase()
 
   const submit = async (e) => {
     e.preventDefault()
@@ -25,9 +26,9 @@ export default function SignInCard({ onLogin, onSuccess }) {
       if (supabaseReady) {
         const { data, error } = await supabase.auth.signInWithPassword({ email, password })
         if (error) { setFails((v) => v + 1); setMessage('Please check your email or password.'); return }
-        onLogin?.({ email: data.user.email, id: data.user.id, role: email === import.meta.env.OWNER_EMAIL ? 'owner' : 'user', onboarded: true, remember })
+        onLogin?.({ email: data.user.email, id: data.user.id, role: (email || '').toLowerCase() === ownerEmail ? 'owner' : 'user', onboarded: true, remember })
       } else {
-        onLogin?.({ ...createLocalUser(email, email === (import.meta.env.OWNER_EMAIL || 'owner@tulus.id') ? 'owner' : 'user'), onboarded: true, remember })
+        onLogin?.({ ...createLocalUser(email, (email || '').toLowerCase() === ownerEmail ? 'owner' : 'user'), onboarded: true, remember })
       }
       onSuccess?.()
     } finally {
@@ -47,3 +48,4 @@ export default function SignInCard({ onLogin, onSuccess }) {
     </form>
   )
 }
+

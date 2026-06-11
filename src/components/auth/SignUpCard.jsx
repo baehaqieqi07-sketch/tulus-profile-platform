@@ -11,6 +11,7 @@ export default function SignUpCard({ onLogin, onProfilePatch, onSuccess }) {
   const [message, setMessage] = useState('')
   const [loading, setLoading] = useState(false)
   const usernameError = validateUsername(form.username)
+  const ownerEmail = (import.meta.env.VITE_OWNER_EMAIL || '').toLowerCase()
 
   const update = (key, value) => setForm((prev) => ({ ...prev, [key]: value }))
 
@@ -26,9 +27,9 @@ export default function SignUpCard({ onLogin, onProfilePatch, onSuccess }) {
       if (supabaseReady) {
         const { data, error } = await supabase.auth.signUp({ email: form.email, password: form.password, options: { data: { username: form.username } } })
         if (error) { setMessage('We could not create your account right now.'); return }
-        onLogin?.({ email: data.user?.email || form.email, id: data.user?.id || crypto.randomUUID(), role: 'user', onboarded: false })
+        onLogin?.({ email: data.user?.email || form.email, id: data.user?.id || crypto.randomUUID(), role: (form.email || '').toLowerCase() === ownerEmail ? 'owner' : 'user', onboarded: false })
       } else {
-        onLogin?.({ ...createLocalUser(form.email, 'user'), onboarded: false })
+        onLogin?.({ ...createLocalUser(form.email, (form.email || '').toLowerCase() === ownerEmail ? 'owner' : 'user'), onboarded: false })
       }
       onProfilePatch?.({ username: form.username, display_name: form.username })
       onSuccess?.()
@@ -48,3 +49,4 @@ export default function SignUpCard({ onLogin, onProfilePatch, onSuccess }) {
     </form>
   )
 }
+
