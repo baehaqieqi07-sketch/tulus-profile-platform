@@ -1,0 +1,24 @@
+{
+  "project": "TULUS",
+  "version": "1.0.0",
+  "tagline": "A quiet profile space.",
+  "stack": [
+    "React",
+    "Vite",
+    "Supabase",
+    "Cloudflare Turnstile",
+    "Payment Webhook"
+  ],
+  "routes": [
+    "/",
+    "/auth",
+    "/login",
+    "/register",
+    "/onboarding",
+    "/explore",
+    "/:username",
+    "/dashboard",
+    "/tulus-control"
+  ],
+  "notes": "Original aesthetic profile platform, ORANG TULUS Blue Glass, upload from gallery, click-to-enter music, ID/EN language switch, premium billing, owner hidden dashboard."
+}

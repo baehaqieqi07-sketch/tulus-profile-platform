@@ -1,22 +1,20 @@
-# TULUS Premium Update Status
+# TULUS PREMIUM UPDATE STATUS
 
-Update ini fokus ke:
+Build tested: `npm run build` passed.
 
-- logo TULUS original, bukan icon random;
-- landing page premium;
-- login/register lebih rapi;
-- Google/Discord OAuth button siap Supabase Provider;
-- help center dengan AI bekiw bergaya chat;
-- language picker UI;
-- app/social icons yang konsisten;
-- public profile fullscreen bio page;
-- dashboard/sidebar lebih jelas;
-- settings, links, analytics, owner panel flow;
-- effects, bokeh, glow, typing animation, custom cursor styling;
-- responsive HP/tablet/PC.
+Included:
+- Premium orbit logo
+- Full language picker with richer labels
+- bekiw AI chat UI with typing animation
+- Help Center knowledge flow
+- Game Center route `/games`
+- Dashboard links to games/help/settings/customize
+- Improved brand icons
+- Premium blue glass styling and animations
+- Responsive improvements
 
-Catatan:
-
-- Payment gateway real tetap butuh akun/key provider.
-- AI real tetap butuh `OPENAI_API_KEY` server-side.
-- Google/Discord login real butuh OAuth provider aktif di Supabase.
+Notes:
+- Real AI requires `OPENAI_API_KEY` on server-side Edge Function/endpoint.
+- Google/Discord login requires provider setup in Supabase.
+- Payment gateway still requires real payment provider credentials.
+- No secret keys should be committed to GitHub.

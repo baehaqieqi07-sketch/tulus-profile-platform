@@ -1,593 +1,146 @@
 # TULUS — A quiet profile space
 
-TULUS adalah platform profile aesthetic untuk membuat halaman profile pribadi yang bisa dilihat publik, diedit sendiri oleh user, dan tampil soft, calm, premium, clean, serta tidak alay.
+TULUS adalah platform profile/bio page aesthetic dengan public profile `/:username`, click-to-enter, music, social/app links, dashboard edit profile, Help Center AI bekiw, Game Center, owner dashboard hidden, dan UI premium ORANG TULUS Blue Glass.
 
-Project ini dibuat sebagai starter lengkap React + Vite + Supabase + Cloudflare Turnstile. Versi frontend sudah bisa jalan dengan mode local demo memakai `localStorage`, lalu bisa disambungkan ke Supabase untuk production.
+Style utama: soft blue glass, silver, lavender halus, glow biru lembut, clean, modern, responsive, tidak alay, dan tidak berantakan.
 
-## Isi project
+## Route utama
 
-- Landing page `/`
-- Register `/register`
-- Login `/login`
-- Explore `/explore`
-- Public profile `/:username`
-- Dashboard user `/dashboard`
-- Dashboard internal tersembunyi `/tulus-control`
-- Profile card glassmorphism
-- Click to enter screen
-- Music player dengan fallback
-- Theme manager soft premium
-- Quick edit dan advanced edit
-- Social links, badges, quotes, gallery
-- Premium plans dan manual payment demo
-- Supabase schema SQL
-- Supabase RLS policies
-- Supabase storage policies
-- Supabase Edge Functions untuk aksi sensitif
-- Cloudflare Turnstile helper
-- Security headers untuk Vercel/Netlify/Cloudflare Pages
+- `/`
+- `/login`
+- `/register`
+- `/auth`
+- `/onboarding`
+- `/pricing`
+- `/help`
+- `/leaderboard`
+- `/bekiw` atau `/:username`
+- `/account`
+- `/account/settings`
+- `/account/badges`
+- `/account/analytics`
+- `/customize`
+- `/links`
+- `/games`
+- `/tulus-control`
+- 404 aesthetic page not found
 
-## Cara install di VS Code
+## Update penting di ZIP ini
 
-1. Extract ZIP project ini.
-2. Buka folder `tulus-profile-platform` di VS Code.
-3. Buka terminal di VS Code.
-4. Jalankan:
+- Brand icon system lebih rapi dan tidak pakai emoji random sebagai icon utama.
+- Support brand/app/payment icons: Discord, Instagram, Roblox, Spotify, Apple Music, YouTube, TikTok, X/Twitter, GitHub, Telegram, SoundCloud, Twitch, Steam, Pinterest, Website, Custom Link, Google, Email, WhatsApp, Facebook, Snapchat, Reddit, LinkedIn, PayPal, DANA, GoPay, OVO, ShopeePay, QRIS, Bank Transfer.
+- File baru: `src/lib/brandIcons.js`, `src/components/AppIcon.jsx`, `src/components/SocialIconButton.jsx`.
+- Language system ditambah Vietnamese dan alias `getText` / `setLanguage`.
+- Help Center AI bekiw tetap punya fallback lokal dan siap diarahkan ke server-side function.
+- Profile views sekarang memanggil Supabase RPC `increment_profile_view` jika profile punya ID.
+- Leaderboard memakai data public profile dari Supabase dan tidak menampilkan angka random.
+- Game Center punya best score dan daily streak di localStorage.
 
-```bash
-npm install
-npm run dev
+## Cara install lokal Windows
+
+Buka PowerShell:
+
+```powershell
+cd D:\tulus
+npm.cmd install
+npm.cmd run build
+npm.cmd run dev
 ```
 
-5. Buka link yang muncul, biasanya:
+Local URL biasanya:
 
-```bash
+```text
 http://localhost:5173
 ```
 
-## Mode demo lokal
-
-Tanpa Supabase, website tetap bisa dibuka dan diedit. Data disimpan di `localStorage` browser.
-
-Agar bisa masuk dashboard:
-
-1. Buka `/register` atau `/login`.
-2. Isi email dan password bebas untuk demo.
-3. Klik `Turnstile demo check`.
-4. Login/register akan masuk ke `/dashboard`.
-
-Untuk mencoba owner dashboard demo:
-
-1. Isi `.env` dengan:
+## Environment Vercel wajib
 
 ```env
-OWNER_EMAIL=owner@tulus.id
+VITE_SUPABASE_URL=
+VITE_SUPABASE_ANON_KEY=
+VITE_TURNSTILE_SITE_KEY=
+VITE_OWNER_EMAIL=baehaqieqi07@gmail.com
+APP_URL=https://tulus-id.vercel.app
 ```
 
-2. Login memakai email:
+Opsional untuk AI bekiw real:
 
-```txt
-owner@tulus.id
+```env
+VITE_BEKIW_AI_ENDPOINT=
 ```
 
-3. Buka:
+## Secret jangan masuk frontend/GitHub
 
-```txt
-/tulus-control
+Jangan taruh value asli untuk secret ini di frontend atau file yang dipush:
+
+```env
+SUPABASE_SERVICE_ROLE_KEY=
+TURNSTILE_SECRET_KEY=
+OPENAI_API_KEY=
+PAYMENT_SECRET_KEY=
+PAYMENT_WEBHOOK_SECRET=
+CLOUDFLARE_API_TOKEN=
 ```
 
-Catatan: di production, role owner jangan bergantung dari frontend. Gunakan tabel `user_roles`, RLS, dan Edge Functions.
+## Supabase SQL yang aman
 
-## Setup Supabase
+Kalau database sudah pernah dibuat, jangan jalankan `schema.sql`.
 
-1. Buat project baru di Supabase.
-2. Masuk ke SQL Editor.
-3. Jalankan file berikut secara berurutan:
+Jalankan urut di Supabase SQL Editor:
 
-```txt
-supabase/sql/schema.sql
+```text
+supabase/sql/00_FULL_SAFE_MIGRATION.sql
 supabase/sql/rls-policies.sql
 supabase/sql/storage-policies.sql
-```
-
-4. Masuk ke Authentication settings.
-5. Aktifkan email verification.
-6. Tambahkan redirect URL sesuai domain kamu, contoh:
-
-```txt
-http://localhost:5173
-https://tulus.id
-```
-
-## Isi environment variable
-
-Copy `.env.example` menjadi `.env`:
-
-```bash
-cp .env.example .env
-```
-
-Isi bagian frontend:
-
-```env
-VITE_SUPABASE_URL=https://PROJECT_ID.supabase.co
-VITE_SUPABASE_ANON_KEY=anon_key_kamu
-VITE_TURNSTILE_SITE_KEY=site_key_turnstile
-```
-
-Isi bagian backend untuk Supabase Edge Functions:
-
-```env
-SUPABASE_URL=https://PROJECT_ID.supabase.co
-SUPABASE_ANON_KEY=anon_key_kamu
-SUPABASE_SERVICE_ROLE_KEY=service_role_key_kamu
-TURNSTILE_SECRET_KEY=secret_key_turnstile
-OWNER_EMAIL=email_owner_kamu
-OWNER_USER_ID=user_id_owner_kamu
-APP_URL=https://tulus.id
-```
-
-Penting:
-
-- `VITE_SUPABASE_ANON_KEY` boleh di frontend.
-- `VITE_TURNSTILE_SITE_KEY` boleh di frontend.
-- `SUPABASE_SERVICE_ROLE_KEY` tidak boleh masuk frontend.
-- `TURNSTILE_SECRET_KEY` tidak boleh masuk frontend.
-- `CLOUDFLARE_API_TOKEN` tidak boleh masuk frontend.
-
-## Setup owner role pertama
-
-Setelah akun owner dibuat di Supabase Auth, ambil `user_id` owner lalu jalankan SQL:
-
-```sql
-insert into public.user_roles (user_id, role)
-values ('USER_ID_OWNER_DI_SINI', 'owner')
-on conflict do nothing;
-```
-
-Dashboard internal ada di:
-
-```txt
-/tulus-control
-```
-
-Route ini tidak muncul di navbar, landing page, dashboard user biasa, footer, atau sitemap publik.
-
-Jika user biasa membuka `/tulus-control`, tampilan harus seperti 404 dengan teks:
-
-```txt
-page not found
-```
-
-## Setup Cloudflare Turnstile
-
-1. Login ke Cloudflare.
-2. Buka Turnstile.
-3. Klik Add site.
-4. Masukkan domain kamu, contoh `tulus.id`.
-5. Pilih Managed mode.
-6. Copy Site Key ke:
-
-```env
-VITE_TURNSTILE_SITE_KEY=
-```
-
-7. Copy Secret Key ke:
-
-```env
-TURNSTILE_SECRET_KEY=
-```
-
-Turnstile dipakai untuk:
-
-- Register
-- Login setelah beberapa kali gagal
-- Forgot password
-- Upload payment proof
-- Report profile
-- Owner dashboard login
-- Owner action sensitif
-
-## Setup Cloudflare DNS dan SSL
-
-1. Tambahkan domain ke Cloudflare.
-2. Arahkan nameserver domain ke Cloudflare.
-3. Buka SSL/TLS.
-4. Pilih mode `Full (strict)`.
-5. Aktifkan `Always Use HTTPS`.
-6. Aktifkan HSTS jika domain sudah stabil HTTPS.
-7. Aktifkan WAF Managed Rules.
-8. Buat rate limiting untuk route sensitif:
-   - `/register`
-   - `/login`
-   - `/api/*`
-   - `/functions/v1/*`
-   - `/tulus-control`
-9. Optional: lindungi `/tulus-control` dengan Cloudflare Zero Trust / Access.
-
-## Deploy ke Vercel
-
-1. Push project ke GitHub.
-2. Buka Vercel.
-3. Import repository.
-4. Framework: Vite.
-5. Build command:
-
-```bash
-npm run build
-```
-
-6. Output folder:
-
-```txt
-dist
-```
-
-7. Masukkan environment variable dari `.env`.
-8. Deploy.
-
-`vercel.json` sudah disiapkan untuk rewrite semua route ke `index.html`.
-
-## Deploy ke Netlify
-
-1. Push project ke GitHub.
-2. Buka Netlify.
-3. Import repository.
-4. Build command:
-
-```bash
-npm run build
-```
-
-5. Publish directory:
-
-```txt
-dist
-```
-
-6. Masukkan environment variable.
-7. Deploy.
-
-`netlify.toml` sudah disiapkan.
-
-## Deploy ke Cloudflare Pages
-
-1. Push project ke GitHub.
-2. Buka Cloudflare Pages.
-3. Connect repository.
-4. Framework preset: Vite.
-5. Build command:
-
-```bash
-npm run build
-```
-
-6. Output directory:
-
-```txt
-dist
-```
-
-7. Tambahkan environment variable.
-8. Deploy.
-
-File `_headers` sudah disiapkan untuk security headers dasar.
-
-## Manual payment flow
-
-Versi awal memakai manual payment:
-
-1. User buka dashboard.
-2. Masuk menu `Premium`.
-3. Pilih plan.
-4. Masuk menu `Billing`.
-5. Upload bukti pembayaran ke private bucket `payment-proofs`.
-6. Simpan URL private/signed proof ke payment record.
-7. Owner masuk `/tulus-control`.
-8. Owner approve/reject payment.
-9. Jika approve, subscription user berubah sesuai plan.
-
-Edge Functions yang disiapkan:
-
-- `approve-payment`
-- `reject-payment`
-- `update-user-plan`
-- `suspend-profile`
-- `unsuspend-profile`
-- `owner-action-log`
-- `validate-upload`
-- `verify-turnstile`
-- `create-checkout-session`
-
-Deploy Edge Function contoh:
-
-```bash
-supabase functions deploy verify-turnstile
-supabase functions deploy approve-payment
-supabase functions deploy reject-payment
-supabase functions deploy update-user-plan
-supabase functions deploy suspend-profile
-supabase functions deploy unsuspend-profile
-supabase functions deploy owner-action-log
-supabase functions deploy validate-upload
-supabase functions deploy create-checkout-session
-```
-
-## Checklist sebelum public launch
-
-- [ ] RLS aktif semua tabel
-- [ ] Storage policy aman
-- [ ] Turnstile aktif
-- [ ] Cloudflare aktif
-- [ ] SSL Full Strict aktif
-- [ ] WAF aktif
-- [ ] Rate limit aktif
-- [ ] Tidak ada service role key di frontend
-- [ ] Tidak ada secret key di frontend
-- [ ] Owner role sudah dibuat
-- [ ] `/tulus-control` tidak muncul di navbar
-- [ ] User biasa diarahkan ke 404 jika akses `/tulus-control`
-- [ ] Upload file sudah dibatasi
-- [ ] Input sudah disanitasi
-- [ ] Payment proof private
-- [ ] Activity log aktif
-- [ ] Explore tidak menampilkan private/unlisted profile
-- [ ] Error message tidak membocorkan detail teknis
-- [ ] Cloudflare Zero Trust untuk `/tulus-control` sudah dipertimbangkan
-
-## Catatan penting
-
-Project ini adalah starter production-ready structure, bukan jaminan keamanan penuh hanya dari frontend. Untuk production beneran, semua aksi sensitif harus lewat backend atau Supabase Edge Functions, bukan langsung dari frontend.
-
-Yang sudah dibuat di starter ini:
-
-- UI aesthetic soft premium
-- Struktur halaman lengkap
-- Struktur database lengkap
-- RLS dasar
-- Storage policy dasar
-- Edge Functions dasar
-- Turnstile helper
-- Security headers dasar
-
-Yang perlu kamu isi sendiri sebelum live:
-
-- Supabase keys
-- Turnstile keys
-- Owner user ID
-- Payment method asli jika tidak pakai manual
-- Domain asli
-- Cloudflare WAF/rate limit rules
-
----
-
-# Update: Auth Gate + Click To Enter + Music Recommendation
-
-Update ini menambahkan flow baru yang lebih rapi:
-
-```txt
-Auth Gate → Sign In / Sign Up → Onboarding → Click To Enter → Profile Experience / Dashboard
-```
-
-## Auth Flow
-
-Saat membuka `/`, user yang belum login akan melihat **Auth Gate** terlebih dahulu, bukan langsung dashboard. Public visitor tetap bisa membuka profile public seperti `/bekiw` tanpa login.
-
-Route baru:
-
-- `/` — Auth Gate jika belum login, Enter Gate jika sudah login
-- `/login` — Auth Gate tab Sign In
-- `/register` — Auth Gate tab Sign Up
-- `/onboarding` — onboarding singkat setelah sign up
-- `/enter` — pilihan `click to enter` atau `edit profile`
-- `/me` — personal profile experience setelah user klik enter
-- `/:username` — public visitor profile flow
-
-Alur Sign Up:
-
-1. User isi email, password, dan username.
-2. User menyelesaikan Cloudflare Turnstile.
-3. Jika Supabase aktif, proses memakai Supabase Auth dan email verification bisa diaktifkan dari Supabase.
-4. Setelah sukses, user masuk onboarding.
-5. User boleh pilih nama, vibe, dan music optional.
-6. User diarahkan ke click-to-enter.
-
-Alur Sign In:
-
-1. User isi email dan password.
-2. Login normal tidak memakai Turnstile.
-3. Jika gagal 3 kali, Turnstile muncul.
-4. Setelah sukses, user diarahkan ke click-to-enter.
-
-## Click To Enter + Autoplay Music
-
-Browser modern tidak mengizinkan audio autoplay sebelum user melakukan interaksi. Karena itu TULUS memakai **click to enter** sebagai interaksi resmi.
-
-Aturan music:
-
-- Music tidak autoplay sebelum user klik enter.
-- Setelah user klik enter, aplikasi memanggil `audio.play()`.
-- Jika direct audio valid, music akan play.
-- Jika autoplay gagal, aplikasi menampilkan fallback `tap to play music`.
-- Jika music kosong, profile tetap tampil tanpa error.
-- YouTube, Spotify, Apple Music, dan SoundCloud tidak dipaksa menjadi direct audio. Link tersebut ditampilkan sebagai tombol `open music`.
-
-## Dashboard Music
-
-Menu dashboard `Music` sekarang punya dua mode:
-
-### Quick Music
-
-- Recommended music
-- Paste music link
-- Upload audio
-- Preview
-
-### Advanced Music
-
-- Direct audio URL
-- External music URL
-- Loop on/off
-- Volume default
-- Show/hide music player
-- Equalizer on/off
-- Fallback button text
-- Music source type
-
-Jenis input music:
-
-1. Recommended Music
-2. Paste Link
-3. Upload Audio
-
-Direct audio yang bisa diputar:
-
-- `.mp3`
-- `.ogg`
-- `.wav`
-
-External platform fallback:
-
-- YouTube
-- Spotify
-- Apple Music
-- SoundCloud
-- Custom URL
-
-## Recommended Music
-
-File frontend:
-
-```txt
-src/data/musicRecommendations.js
-src/components/music/MusicRecommendationList.jsx
-src/components/music/MusicRecommendationCard.jsx
-```
-
-Owner dashboard `/tulus-control` sekarang punya bagian **Recommended Music** untuk:
-
-- Tambah recommended music
-- Edit konsep music dari database/Edge Function production
-- Set Free/Premium
-- Aktif/nonaktif
-- Delete
-- Preview URL
-
-Catatan penting: jangan memasukkan lagu komersial/copyright tanpa izin. Gunakan audio buatan sendiri, bebas lisensi, atau placeholder yang nanti diganti owner.
-
-## SQL tambahan music recommendation
-
-Jalankan file ini setelah `schema.sql`, `rls-policies.sql`, dan `storage-policies.sql`:
-
-```txt
 supabase/sql/music-recommendations.sql
+supabase/sql/01_OWNER_BEKIW_SETUP.sql
 ```
 
-File ini menambahkan:
+Kalau muncul error `profile_visibility already exists`, artinya yang dijalankan file schema mentah. Solusi: pakai `00_FULL_SAFE_MIGRATION.sql`.
 
-- Tabel `music_recommendations`
-- Kolom music baru di `profiles`
-- RLS untuk recommended music
-- Seed placeholder music
+## Bucket Supabase Storage
 
-Kolom baru `profiles`:
+- `avatars` public
+- `backgrounds` public
+- `gallery` public
+- `profile-music` public
+- `payment-proofs` private
 
-- `music_source_type`
-- `music_recommendation_id`
-- `music_direct_url`
-- `music_external_url`
-- `music_upload_url`
-- `music_loop`
-- `music_volume`
-- `music_equalizer_enabled`
-- `music_fallback_text`
+## Login provider
 
-## Edge Functions tambahan
+Google dan Discord button sudah disiapkan di UI. Untuk login real, aktifkan provider di:
 
-Tambahan function owner-only:
+**Supabase → Authentication → Providers**
 
-```bash
-supabase functions deploy create-music-recommendation
-supabase functions deploy update-music-recommendation
-supabase functions deploy delete-music-recommendation
+Lalu isi Client ID dan Client Secret asli dari Google/Discord developer dashboard.
+
+## AI bekiw real
+
+UI Help Center sudah siap. Fallback lokal tetap jalan tanpa API key.
+
+Untuk AI real, deploy Supabase Edge Function `bekiw-help-ai`, isi server env:
+
+```env
+OPENAI_API_KEY=
+OPENAI_MODEL=gpt-5.5
 ```
 
-Function ini wajib dijalankan server-side dan hanya boleh untuk role `owner`.
+Jangan pernah taruh `OPENAI_API_KEY` di frontend.
 
-## Security tambahan music
+## Payment / premium
 
-- Hanya izinkan mp3, ogg, wav untuk upload audio.
-- Validasi MIME type lewat backend/Edge Function.
-- Rename file otomatis.
-- Simpan file di folder user masing-masing.
-- User hanya bisa update/delete music miliknya sendiri.
-- Owner hanya bisa manage recommended music melalui role owner.
-- Tolak `javascript:` URL.
-- Tolak `data:` URL.
-- Jika direct audio gagal karena CORS, tampilkan fallback.
-- Jangan spam request audio.
+UI Free, Plus, Pro, Lifetime dan scaffold pembayaran sudah disiapkan. Payment otomatis belum aktif sampai payment gateway key dan webhook asli dipasang.
 
-## File baru update auth + music
+Provider yang bisa disiapkan nanti: Midtrans, Xendit, Duitku, Stripe, atau manual payment proof.
 
-```txt
-src/routes/AuthGate.jsx
-src/routes/Onboarding.jsx
-src/routes/EnterGate.jsx
-src/routes/ProfileExperience.jsx
+## Build test status
 
-src/components/auth/SignInCard.jsx
-src/components/auth/SignUpCard.jsx
-src/components/auth/AuthTabs.jsx
-src/components/auth/AuthGateBackground.jsx
+Build terakhir sukses:
 
-src/components/music/MusicDashboard.jsx
-src/components/music/QuickMusic.jsx
-src/components/music/AdvancedMusic.jsx
-src/components/music/MusicRecommendationList.jsx
-src/components/music/MusicRecommendationCard.jsx
-src/components/music/MusicLinkInput.jsx
-src/components/music/MusicUploadButton.jsx
-src/components/music/MusicPreview.jsx
-src/components/music/MusicFallbackButton.jsx
-src/components/music/MusicEqualizer.jsx
-
-src/components/onboarding/OnboardingSteps.jsx
-src/components/onboarding/PickNameStep.jsx
-src/components/onboarding/ChooseVibeStep.jsx
-src/components/onboarding/AddMusicStep.jsx
-src/components/onboarding/EnterSpaceStep.jsx
-
-src/lib/music.js
-src/lib/musicLinkDetector.js
-src/lib/authFlow.js
-
-supabase/sql/music-recommendations.sql
-
-supabase/functions/create-music-recommendation/index.ts
-supabase/functions/update-music-recommendation/index.ts
-supabase/functions/delete-music-recommendation/index.ts
+```text
+npm install
+npm run build
+✓ built
 ```
 
-## TULUS Full Platform Update v2
-
-Update ini merapikan alur utama TULUS:
-
-- Auth Gate `/auth`, `/login`, `/register`
-- Public profile `/:username`
-- Dashboard `/dashboard`
-- Owner panel tersembunyi `/tulus-control`
-- Click-to-enter sebelum profile experience
-- Music system clean:
-  - Direct audio `.mp3/.wav/.ogg/.m4a/.aac/.flac` bisa play setelah click-to-enter
-  - YouTube, YouTube Music, Spotify, TikTok, SoundCloud, Apple Music, Instagram, Deezer, Joox tampil sebagai tombol external
-  - Upload audio ke Supabase Storage bucket `profile-music`
-- Supabase public profile loading
-- Dashboard profile save ke Supabase
-- SQL schema + safe migration
-- Storage policies
-- Edge Function scaffold untuk payment, owner action, report, tracking, dan music recommendation
-
-Baca `CARA_PASANG_FULL_UPDATE.md` untuk langkah paling gampang dari awal sampai web aktif.
-
-### Catatan jujur produksi
-Payment gateway otomatis tetap perlu key asli dari Midtrans/Xendit/Duitku/Stripe dan verifikasi webhook sesuai provider. File function sudah disiapkan sebagai scaffold aman, tapi jangan dianggap pembayaran otomatis aktif sebelum provider key dipasang dan dites.
+Warning chunk lebih dari 500kB adalah warning performa, bukan error.

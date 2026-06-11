@@ -3,12 +3,8 @@ import EnterScreen from '../components/EnterScreen.jsx'
 import MusicPlayer from '../components/MusicPlayer.jsx'
 import ViewCounter from '../components/ViewCounter.jsx'
 import PremiumCursor from '../components/PremiumCursor.jsx'
-import BrandIcon from '../components/BrandIcon.jsx'
+import SocialIconButton from '../components/SocialIconButton.jsx'
 import { themeVars } from '../lib/themes.js'
-
-function iconName(link) {
-  return (link.icon || link.app_name || link.label || '').toLowerCase()
-}
 
 export default function PublicProfile({ username, profile, links = [], incrementView, isPersonalExperience = false }) {
   const [entered, setEntered] = useState(Boolean(isPersonalExperience))
@@ -32,7 +28,7 @@ export default function PublicProfile({ username, profile, links = [], increment
         <h1>{profile.display_name || username}</h1>
         <p className="v100-public-location">⌖ {profile.location || 'TULUS Space'}</p>
         <p className="v100-public-bio">{profile.bio || 'quiet page, clean links, soft blue glass.'}</p>
-        <div className="v100-public-icons v500-public-icons">{activeLinks.map((link)=><a key={link.id || link.url} href={link.url} target="_blank" rel="noreferrer" title={link.label}><BrandIcon name={iconName(link)} /></a>)}</div>
+        <div className="v100-public-icons v500-public-icons">{activeLinks.map((link)=><SocialIconButton key={link.id || link.url} link={link} mode="icon-only" />)}</div>
         <div className="v100-public-meta"><ViewCounter views={profile.views} show={profile.show_views} /></div>
         {profile.show_music !== false && <div className="v100-public-music v500-public-music"><MusicPlayer profile={profile} entered={entered} compact /></div>}
       </section>

@@ -1,20 +1,20 @@
-import { useState } from 'react'
 import TulusLogo from './TulusLogo.jsx'
 import LanguageSwitcher from './LanguageSwitcher.jsx'
-import { getInitialLang } from '../lib/i18n.js'
+import { useTulusLanguage } from '../lib/i18n.js'
 
 export default function TulusNav() {
-  const [lang, setLang] = useState(getInitialLang())
+  const { t } = useTulusLanguage()
   return (
-    <nav className="v500-nav">
+    <nav className="v500-nav mega-nav">
       <a className="v500-brand" href="/"><TulusLogo /></a>
       <div className="v500-nav-links">
-        <a href="/help">Help Center</a>
-        <a href="/leaderboard">Leaderboard</a>
-        <a href="/pricing">Pricing</a>
-        <a href="/login">Login</a>
-        <LanguageSwitcher value={lang} onChange={setLang} compact />
-        <a className="v500-nav-cta" href="/register">Create profile</a>
+        <a href="/help">{t('help')}</a>
+        <a href="/games">{t('games')}</a>
+        <a href="/leaderboard">{t('leaderboard')}</a>
+        <a href="/pricing">{t('pricing')}</a>
+        <a href="/login">{t('login')}</a>
+        <LanguageSwitcher compact />
+        <a className="v500-nav-cta" href="/register">{t('create')}</a>
       </div>
     </nav>
   )

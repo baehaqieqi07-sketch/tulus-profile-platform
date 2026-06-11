@@ -3,6 +3,7 @@ import Landing from './routes/Landing.jsx'
 import Pricing from './routes/Pricing.jsx'
 import HelpCenter from './routes/HelpCenter.jsx'
 import Leaderboard from './routes/Leaderboard.jsx'
+import GameCenter from './routes/GameCenter.jsx'
 import AccountDashboard from './routes/AccountDashboard.jsx'
 import AccountSettings from './routes/AccountSettings.jsx'
 import AccountBadges from './routes/AccountBadges.jsx'
@@ -26,10 +27,10 @@ import { demoProfile, demoLinks, demoBadges, demoQuotes, demoGallery } from './d
 import { themeVars } from './lib/themes.js'
 import { validateUsername } from './lib/validation.js'
 import { supabase, supabaseReady } from './lib/supabase.js'
-import { ensureStarterProfile, loadPublicProfile, loadUserBundle, resolveRole } from './lib/profileStore.js'
+import { ensureStarterProfile, loadPublicProfile, loadUserBundle, resolveRole, incrementProfileView } from './lib/profileStore.js'
 
 const STORAGE_KEY = 'tulus.local.v3'
-const BLOCKED_PUBLIC_PATHS = ['dashboard', 'tulus-control', 'login', 'register', 'auth', 'landing', 'enter', 'me', 'explore', 'onboarding', 'pricing', 'help', 'leaderboard', 'account', 'customize', 'links', 'premium', 'image-host', 'templates']
+const BLOCKED_PUBLIC_PATHS = ['dashboard', 'tulus-control', 'login', 'register', 'auth', 'landing', 'enter', 'me', 'explore', 'onboarding', 'pricing', 'help', 'leaderboard', 'account', 'customize', 'links', 'premium', 'image-host', 'templates', 'games']
 
 function readLocal() {
   try { return JSON.parse(localStorage.getItem(STORAGE_KEY)) || {} } catch { return {} }
@@ -117,11 +118,14 @@ export default function App() {
 
   const incrementView = () => {
     const current = publicBundle?.profile || profile
+    if (!current?.username) return
     const viewKey = `tulus.view.${current.username}`
     const last = Number(localStorage.getItem(viewKey) || 0)
     if (Date.now() - last > 1000 * 60 * 60) {
       localStorage.setItem(viewKey, String(Date.now()))
+      if (current?.id) incrementProfileView(current.id).catch(() => null)
       setProfile((prev) => prev.username === current.username ? ({ ...prev, views: Number(prev.views || 0) + 1 }) : prev)
+      setPublicBundle((prev) => prev?.profile?.username === current.username ? ({ ...prev, profile: { ...prev.profile, views: Number(prev.profile.views || 0) + 1 } }) : prev)
     }
   }
 
@@ -134,6 +138,7 @@ export default function App() {
   if (path === '/pricing') return nav(<Pricing />)
   if (path === '/help') return nav(<HelpCenter />)
   if (path === '/leaderboard') return nav(<Leaderboard />)
+  if (path === '/games') return nav(<GameCenter />)
   if (path === '/login') return nav(<Login onLogin={setUser} onProfilePatch={onProfilePatch} profile={profile} />)
   if (path === '/register') return nav(<Register onLogin={setUser} onProfilePatch={onProfilePatch} profile={profile} />)
   if (path === '/onboarding') return nav(<Onboarding user={user} setUser={setUser} profile={profile} setProfile={setProfile} />)
