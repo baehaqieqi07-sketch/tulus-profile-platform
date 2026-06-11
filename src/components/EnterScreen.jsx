@@ -1,8 +1,4 @@
-export default function EnterScreen({ onEnter, hidden, subtitle }) {
-  return (
-    <button className={`enter-screen ${hidden ? 'enter-screen-hidden' : ''}`} onClick={onEnter} aria-label="Click to enter">
-      <span>click to enter</span>
-      {subtitle && <small>{subtitle}</small>}
-    </button>
-  )
+export default function EnterScreen({ onEnter, hidden }) {
+  if (hidden) return null
+  return <button className="v7-enter" onClick={onEnter}><span>click to enter</span><small>your space is ready</small></button>
 }

@@ -22,3 +22,8 @@ Yang sudah dimasukkan:
 
 Catatan penting:
 Payment gateway otomatis membutuhkan akun dan key asli Midtrans/Xendit/Duitku/Stripe. Kode scaffold dan env sudah ada, tetapi transaksi asli tidak bisa aktif tanpa kredensial provider.
+
+
+## BIO STYLE V5
+- Public profile dibuat lebih mirip vibe bio-page modern: fullscreen, center glass card, square social icons, music card, click-to-enter, dark blue glass.
+- Tidak copy asset/layout persis dari platform lain.

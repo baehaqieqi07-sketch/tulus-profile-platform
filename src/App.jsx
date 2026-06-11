@@ -1,5 +1,16 @@
 import { useEffect, useMemo, useState } from 'react'
 import Landing from './routes/Landing.jsx'
+import Pricing from './routes/Pricing.jsx'
+import HelpCenter from './routes/HelpCenter.jsx'
+import Leaderboard from './routes/Leaderboard.jsx'
+import AccountDashboard from './routes/AccountDashboard.jsx'
+import AccountSettings from './routes/AccountSettings.jsx'
+import AccountBadges from './routes/AccountBadges.jsx'
+import AccountAnalytics from './routes/AccountAnalytics.jsx'
+import CustomizePage from './routes/CustomizePage.jsx'
+import LinksPage from './routes/LinksPage.jsx'
+import PremiumPage from './routes/PremiumPage.jsx'
+import PlaceholderDashboard from './routes/PlaceholderDashboard.jsx'
 import AuthGate from './routes/AuthGate.jsx'
 import Login from './routes/Login.jsx'
 import Register from './routes/Register.jsx'
@@ -18,7 +29,7 @@ import { supabase, supabaseReady } from './lib/supabase.js'
 import { ensureStarterProfile, loadPublicProfile, loadUserBundle, resolveRole } from './lib/profileStore.js'
 
 const STORAGE_KEY = 'tulus.local.v3'
-const BLOCKED_PUBLIC_PATHS = ['dashboard', 'tulus-control', 'login', 'register', 'auth', 'landing', 'enter', 'me', 'explore', 'onboarding']
+const BLOCKED_PUBLIC_PATHS = ['dashboard', 'tulus-control', 'login', 'register', 'auth', 'landing', 'enter', 'me', 'explore', 'onboarding', 'pricing', 'help', 'leaderboard', 'account', 'customize', 'links', 'premium', 'image-host', 'templates']
 
 function readLocal() {
   try { return JSON.parse(localStorage.getItem(STORAGE_KEY)) || {} } catch { return {} }
@@ -117,15 +128,27 @@ export default function App() {
   const onProfilePatch = (patch) => setProfile((prev) => ({ ...prev, ...patch }))
   const nav = (component) => component
 
-  if (path === '/') return user ? nav(<EnterGate user={user} profile={profile} />) : nav(<AuthGate onLogin={setUser} onProfilePatch={onProfilePatch} profile={profile} />)
+  if (path === '/') return nav(<Landing />)
   if (path === '/auth') return nav(<AuthGate onLogin={setUser} onProfilePatch={onProfilePatch} profile={profile} />)
   if (path === '/landing') return nav(<Landing />)
+  if (path === '/pricing') return nav(<Pricing />)
+  if (path === '/help') return nav(<HelpCenter />)
+  if (path === '/leaderboard') return nav(<Leaderboard />)
   if (path === '/login') return nav(<Login onLogin={setUser} onProfilePatch={onProfilePatch} profile={profile} />)
   if (path === '/register') return nav(<Register onLogin={setUser} onProfilePatch={onProfilePatch} profile={profile} />)
   if (path === '/onboarding') return nav(<Onboarding user={user} setUser={setUser} profile={profile} setProfile={setProfile} />)
   if (path === '/enter') return nav(<EnterGate user={user} profile={profile} />)
   if (path === '/me') return nav(<ProfileExperience username={profile.username} profile={profile} links={links} badges={badges} quotes={quotes} gallery={gallery} incrementView={incrementView} />)
   if (path === '/dashboard') return nav(<Dashboard user={user} profile={profile} setProfile={setProfile} links={links} setLinks={setLinks} badges={badges} setBadges={setBadges} quotes={quotes} setQuotes={setQuotes} gallery={gallery} setGallery={setGallery} payments={payments} setPayments={setPayments} saveAll={() => {}} />)
+  if (path === '/account') return nav(<AccountDashboard user={user} profile={profile} />)
+  if (path === '/account/settings') return nav(<AccountSettings user={user} profile={profile} />)
+  if (path === '/account/badges') return nav(<AccountBadges user={user} profile={profile} />)
+  if (path === '/account/analytics') return nav(<AccountAnalytics user={user} profile={profile} />)
+  if (path === '/customize') return nav(<CustomizePage user={user} profile={profile} setProfile={setProfile} />)
+  if (path === '/links') return nav(<LinksPage user={user} profile={profile} />)
+  if (path === '/premium') return nav(<PremiumPage user={user} profile={profile} />)
+  if (path === '/image-host') return nav(<PlaceholderDashboard user={user} profile={profile} title="Image Host" />)
+  if (path === '/templates') return nav(<PlaceholderDashboard user={user} profile={profile} title="Templates" />)
   if (path === '/tulus-control') return nav(<OwnerPanel user={user} profile={profile} setProfile={setProfile} payments={payments} setPayments={setPayments} musicRecommendations={musicRecommendations} setMusicRecommendations={setMusicRecommendations} />)
   if (path === '/explore') return nav(<Explore profile={profile} links={links} badges={badges} />)
 

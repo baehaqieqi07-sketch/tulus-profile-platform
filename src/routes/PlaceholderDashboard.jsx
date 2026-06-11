@@ -1,0 +1,2 @@
+import V7DashboardShell from '../components/V7DashboardShell.jsx'
+export default function PlaceholderDashboard({ user, profile, title = 'Templates' }) { return <V7DashboardShell user={user} profile={profile} active={title}><h1>{title}</h1><section className="v7-empty-rich"><h2>{title} manager</h2><p>This section is prepared for TULUS premium tools, uploads, templates, and safe profile customization.</p><div><button>Upload</button><button>Create</button><button>Manage</button></div></section></V7DashboardShell> }

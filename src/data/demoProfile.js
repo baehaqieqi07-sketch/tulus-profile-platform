@@ -2,15 +2,15 @@ export const demoProfile = {
   user_id: 'demo-user',
   username: 'bekiw',
   display_name: 'bekiw',
-  bio: 'just a quiet page for the things i like.',
+  bio: 'quiet page, clean links, soft blue glass.',
   avatar_url: '',
   background_url: '',
   background_type: 'gradient',
-  background_overlay: 'rgba(255,255,255,.28)',
+  background_overlay: 'rgba(0,0,0,.62)',
   background_blur: 0,
   background_brightness: 100,
-  music_title: 'Quiet Link',
-  music_artist: 'YouTube',
+  music_title: 'soft room',
+  music_artist: 'tulus space',
   music_url: 'https://www.youtube.com/',
   music_source_type: 'external_platform',
   music_recommendation_id: '',
@@ -21,8 +21,8 @@ export const demoProfile = {
   music_loop: true,
   music_volume: 0.55,
   music_equalizer_enabled: true,
-  music_fallback_text: 'Open on YouTube',
-  theme_name: 'Orang Tulus Blue Glass',
+  music_fallback_text: 'open music',
+  theme_name: 'TULUS Bio Night',
   accent_color: '#4F8CFF',
   layout_name: 'Classic Card',
   visibility: 'public',
@@ -36,14 +36,14 @@ export const demoProfile = {
   is_suspended: false,
   is_hidden_from_explore: false,
   views: 1207,
-  status: 'softly online',
+  status: 'online',
   plan: 'free'
 }
 
 export const demoLinks = [
-  { id: 'discord', label: 'Discord', url: 'https://discord.com', icon: 'Discord', style: 'Glass', is_active: true, sort_order: 1, clicks: 0 },
-  { id: 'instagram', label: 'Instagram', url: 'https://instagram.com', icon: 'Instagram', style: 'Pearl button', is_active: true, sort_order: 2, clicks: 0 },
-  { id: 'spotify', label: 'Spotify', url: 'https://spotify.com', icon: 'Spotify', style: 'Floating pill', is_active: true, sort_order: 3, clicks: 0 }
+  { id: 'discord', label: 'Discord', url: 'https://discord.com', icon: 'discord', style: 'Glass', is_active: true, sort_order: 1, clicks: 0 },
+  { id: 'instagram', label: 'Instagram', url: 'https://instagram.com', icon: 'instagram', style: 'Pearl button', is_active: true, sort_order: 2, clicks: 0 },
+  { id: 'spotify', label: 'Spotify', url: 'https://spotify.com', icon: 'spotify', style: 'Floating pill', is_active: true, sort_order: 3, clicks: 0 }
 ]
 
 export const demoBadges = [

@@ -24,23 +24,25 @@ insert into public.profiles (
   music_artist,
   music_url,
   music_external_url,
-  music_fallback_text
+  music_fallback_text,
+  background_overlay
 )
 select
   id,
   'bekiw',
   'bekiw',
-  'just a quiet page for the things i like.',
+  'quiet page, clean links, soft blue glass.',
   'public'::public.profile_visibility,
   true,
   'external_platform',
-  'Orang Tulus Blue Glass',
+  'TULUS Bio Night',
   '#4F8CFF',
-  'Quiet Link',
-  'YouTube',
+  'soft room',
+  'tulus space',
   'https://www.youtube.com/',
   'https://www.youtube.com/',
-  'Open on YouTube'
+  'open music',
+  'rgba(0,0,0,.62)'
 from auth.users
 where email = 'baehaqieqi07@gmail.com'
 on conflict (username) do update set
@@ -49,13 +51,14 @@ on conflict (username) do update set
   visibility = 'public'::public.profile_visibility,
   show_music = true,
   music_source_type = 'external_platform',
-  theme_name = 'Orang Tulus Blue Glass',
+  theme_name = 'TULUS Bio Night',
   accent_color = '#4F8CFF',
-  music_title = coalesce(nullif(public.profiles.music_title, ''), 'Quiet Link'),
-  music_artist = coalesce(nullif(public.profiles.music_artist, ''), 'YouTube'),
+  music_title = coalesce(nullif(public.profiles.music_title, ''), 'soft room'),
+  music_artist = coalesce(nullif(public.profiles.music_artist, ''), 'tulus space'),
   music_url = coalesce(nullif(public.profiles.music_url, ''), 'https://www.youtube.com/'),
   music_external_url = coalesce(nullif(public.profiles.music_external_url, ''), 'https://www.youtube.com/'),
-  music_fallback_text = coalesce(nullif(public.profiles.music_fallback_text, ''), 'Open on YouTube'),
+  music_fallback_text = coalesce(nullif(public.profiles.music_fallback_text, ''), 'open music'),
+  background_overlay = 'rgba(0,0,0,.62)',
   updated_at = now();
 
 insert into public.badges (user_id, label, color, style, is_active, sort_order)
@@ -79,3 +82,16 @@ cross join (values
 ) as x(text, sort_order)
 where u.email = 'baehaqieqi07@gmail.com'
 and not exists (select 1 from public.quotes q where q.user_id = u.id and q.text = x.text);
+
+
+-- Default bio-style social links for public profile
+insert into public.social_links (user_id, label, url, icon, style, is_active, sort_order)
+select u.id, x.label, x.url, x.icon, 'glass', true, x.sort_order
+from auth.users u
+cross join (values
+  ('Discord', 'https://discord.com', 'discord', 1),
+  ('Instagram', 'https://instagram.com', 'instagram', 2),
+  ('Spotify', 'https://spotify.com', 'spotify', 3)
+) as x(label, url, icon, sort_order)
+where u.email = 'baehaqieqi07@gmail.com'
+and not exists (select 1 from public.social_links s where s.user_id = u.id and s.label = x.label);
