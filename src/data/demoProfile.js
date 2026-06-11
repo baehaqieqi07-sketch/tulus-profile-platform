@@ -43,7 +43,9 @@ export const demoProfile = {
 export const demoLinks = [
   { id: 'discord', label: 'Discord', url: 'https://discord.com', icon: 'discord', style: 'Glass', is_active: true, sort_order: 1, clicks: 0 },
   { id: 'instagram', label: 'Instagram', url: 'https://instagram.com', icon: 'instagram', style: 'Pearl button', is_active: true, sort_order: 2, clicks: 0 },
-  { id: 'spotify', label: 'Spotify', url: 'https://spotify.com', icon: 'spotify', style: 'Floating pill', is_active: true, sort_order: 3, clicks: 0 }
+  { id: 'spotify', label: 'Spotify', url: 'https://spotify.com', icon: 'spotify', style: 'Floating pill', is_active: true, sort_order: 3, clicks: 0 },
+  { id: 'roblox', label: 'Roblox', url: 'https://roblox.com', icon: 'roblox', style: 'Soft square', is_active: true, sort_order: 4, clicks: 0 },
+  { id: 'applemusic', label: 'Apple Music', url: 'https://music.apple.com', icon: 'apple music', style: 'Pearl button', is_active: true, sort_order: 5, clicks: 0 }
 ]
 
 export const demoBadges = [

@@ -4,6 +4,7 @@ import { normalizeUsername, validateUsername } from '../../lib/validation.js'
 import { localRateLimit } from '../../lib/rateLimit.js'
 import { supabase, supabaseReady } from '../../lib/supabase.js'
 import { createLocalUser } from '../../lib/authFlow.js'
+import BrandIcon from '../BrandIcon.jsx'
 
 export default function SignUpCard({ onLogin, onProfilePatch, onSuccess }) {
   const [form, setForm] = useState({ email: '', password: '', username: '' })
@@ -14,6 +15,17 @@ export default function SignUpCard({ onLogin, onProfilePatch, onSuccess }) {
   const ownerEmail = (import.meta.env.VITE_OWNER_EMAIL || import.meta.env.OWNER_EMAIL || '').toLowerCase()
 
   const update = (key, value) => setForm((prev) => ({ ...prev, [key]: value }))
+
+
+  const oauthSignup = async (provider) => {
+    setMessage('')
+    if (!supabaseReady) return setMessage('OAuth needs Supabase env to be active.')
+    const { error } = await supabase.auth.signInWithOAuth({
+      provider,
+      options: { redirectTo: `${location.origin}/onboarding` }
+    })
+    if (error) setMessage(provider === 'discord' ? 'Discord signup is not active yet. Enable it in Supabase providers.' : 'Google signup is not active yet. Enable it in Supabase providers.')
+  }
 
   const submit = async (e) => {
     e.preventDefault()
@@ -46,6 +58,7 @@ export default function SignUpCard({ onLogin, onProfilePatch, onSuccess }) {
       <TurnstileBox required onToken={setToken} />
       {message && <p className="soft-error">{message}</p>}
       <button className="primary-button sparkle-button" disabled={loading}>{loading ? 'Creating...' : 'Create account'}</button>
+      <div className="oauth-row"><button type="button" className="secondary-button brand-oauth" onClick={() => oauthSignup('google')}><BrandIcon name="google" /> Continue with Google</button><button type="button" className="secondary-button brand-oauth" onClick={() => oauthSignup('discord')}><BrandIcon name="discord" /> Continue with Discord</button></div>
     </form>
   )
 }
