@@ -66,6 +66,7 @@ export default function App() {
   const usernamePath = decodeURIComponent(path.replace(/^\//, ''))
 
   if (path === '/') return user ? nav(<EnterGate user={user} profile={profile} />) : nav(<AuthGate onLogin={setUser} onProfilePatch={onProfilePatch} profile={profile} />)
+  if (path === '/auth') return nav(<AuthGate onLogin={setUser} onProfilePatch={onProfilePatch} profile={profile} />)
   if (path === '/landing') return nav(<Landing />)
   if (path === '/login') return nav(<Login onLogin={setUser} onProfilePatch={onProfilePatch} profile={profile} />)
   if (path === '/register') return nav(<Register onLogin={setUser} onProfilePatch={onProfilePatch} profile={profile} />)
@@ -79,3 +80,4 @@ export default function App() {
   if (usernamePath && ['bekiw', 'aulia', 'qiel'].includes(usernamePath)) return nav(<PublicProfile username={usernamePath} profile={{ ...demoProfile, username: usernamePath, display_name: usernamePath }} links={demoLinks} badges={demoBadges} quotes={demoQuotes} gallery={demoGallery} incrementView={() => {}} />)
   return <NotFound />
 }
+
