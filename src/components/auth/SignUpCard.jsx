@@ -11,7 +11,7 @@ export default function SignUpCard({ onLogin, onProfilePatch, onSuccess }) {
   const [message, setMessage] = useState('')
   const [loading, setLoading] = useState(false)
   const usernameError = validateUsername(form.username)
-  const ownerEmail = (import.meta.env.VITE_OWNER_EMAIL || '').toLowerCase()
+  const ownerEmail = (import.meta.env.VITE_OWNER_EMAIL || import.meta.env.OWNER_EMAIL || '').toLowerCase()
 
   const update = (key, value) => setForm((prev) => ({ ...prev, [key]: value }))
 
@@ -49,4 +49,3 @@ export default function SignUpCard({ onLogin, onProfilePatch, onSuccess }) {
     </form>
   )
 }
-

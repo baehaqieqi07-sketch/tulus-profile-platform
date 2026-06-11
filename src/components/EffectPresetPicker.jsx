@@ -1,0 +1,1 @@
+export default function EffectPresetPicker({ value='Calm', onChange }) { return <select value={value} onChange={(e)=>onChange?.(e.target.value)}>{['Calm','Smooth','Dreamy','Star Dust','Blue Aura','Pearl Motion','Aurora Glass','Luxury Minimal','Premium Motion'].map(x=><option key={x}>{x}</option>)}</select> }

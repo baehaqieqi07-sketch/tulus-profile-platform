@@ -1,8 +1,8 @@
-export default function MusicUploadButton({ onPick }) {
+export default function MusicUploadButton({ onPick, uploading = false }) {
   return (
-    <label className="upload-soft">Upload Music
-      <input type="file" accept="audio/mpeg,audio/ogg,audio/wav" onChange={(e) => onPick?.(e.target.files?.[0])} />
-      <small>mp3, ogg, or wav only. Production upload should go to Supabase Storage in the user folder.</small>
+    <label className="upload-soft">{uploading ? 'Uploading music...' : 'Upload Music'}
+      <input disabled={uploading} type="file" accept="audio/mpeg,audio/ogg,audio/wav,audio/mp4,audio/aac,audio/flac" onChange={(e) => onPick?.(e.target.files?.[0])} />
+      <small>mp3, ogg, wav, m4a, aac, or flac. File is saved to Supabase Storage bucket profile-music when Supabase is ready.</small>
     </label>
   )
 }

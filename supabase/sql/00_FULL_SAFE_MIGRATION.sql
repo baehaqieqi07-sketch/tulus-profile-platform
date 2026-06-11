@@ -1,12 +1,29 @@
 -- TULUS database schema
 create extension if not exists "pgcrypto";
 
-create type public.profile_visibility as enum ('public', 'unlisted', 'private');
-create type public.subscription_plan as enum ('free', 'plus', 'pro', 'lifetime');
-create type public.subscription_status as enum ('active', 'pending', 'expired', 'cancelled');
-create type public.payment_status as enum ('draft', 'pending', 'approved', 'rejected', 'failed');
-create type public.user_role as enum ('user', 'premium_user', 'moderator', 'owner');
-create type public.report_status as enum ('pending', 'reviewing', 'resolved', 'rejected');
+do $$ begin
+  create type public.profile_visibility as enum ('public', 'unlisted', 'private');
+exception when duplicate_object then null; end $$;
+
+do $$ begin
+  create type public.subscription_plan as enum ('free', 'plus', 'pro', 'lifetime');
+exception when duplicate_object then null; end $$;
+
+do $$ begin
+  create type public.subscription_status as enum ('active', 'pending', 'expired', 'cancelled');
+exception when duplicate_object then null; end $$;
+
+do $$ begin
+  create type public.payment_status as enum ('draft', 'pending', 'approved', 'rejected', 'failed');
+exception when duplicate_object then null; end $$;
+
+do $$ begin
+  create type public.user_role as enum ('user', 'premium_user', 'moderator', 'owner');
+exception when duplicate_object then null; end $$;
+
+do $$ begin
+  create type public.report_status as enum ('pending', 'reviewing', 'resolved', 'rejected');
+exception when duplicate_object then null; end $$;
 
 create table if not exists public.profiles (
   id uuid primary key default gen_random_uuid(),

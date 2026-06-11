@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from 'react'
 import { getProfileMusic } from '../lib/music.js'
 import MusicEqualizer from './music/MusicEqualizer.jsx'
-import MusicFallbackButton from './music/MusicFallbackButton.jsx'
+import MusicPlatformButton from './music/MusicPlatformButton.jsx'
 
 export default function MusicPlayer({ profile, entered = true, compact = false }) {
   const audioRef = useRef(null)
@@ -10,6 +10,8 @@ export default function MusicPlayer({ profile, entered = true, compact = false }
   const [volume, setVolume] = useState(profile.music_volume ?? 0.55)
   const [error, setError] = useState('')
   const music = getProfileMusic(profile)
+
+  useEffect(() => { setVolume(profile.music_volume ?? 0.55) }, [profile.music_volume])
 
   useEffect(() => {
     if (!audioRef.current) return
@@ -32,7 +34,7 @@ export default function MusicPlayer({ profile, entered = true, compact = false }
 
   const toggle = async () => {
     if (!music.playable) {
-      setError(music.externalUrl ? 'This music opens as a clean external link.' : 'no music selected')
+      setError(music.externalUrl ? `${music.platformName} opens externally.` : 'no music selected')
       return
     }
     try {
@@ -55,18 +57,19 @@ export default function MusicPlayer({ profile, entered = true, compact = false }
   }
 
   if (profile.show_music === false) return null
+
   return (
     <div className={`music-player ${compact ? 'music-player-compact' : ''}`}>
       {music.playable && <audio ref={audioRef} src={music.url} loop={profile.music_loop !== false} onTimeUpdate={onTime} onError={() => setError('tap to play music')} />}
-      <button className="music-button" onClick={toggle} aria-label="Toggle music">{playing ? 'pause' : 'play'}</button>
+      <button className="music-button" onClick={toggle} aria-label="Toggle music">{playing ? 'pause' : music.playable ? 'play' : 'open'}</button>
       <div className="music-meta">
         <strong>{music.title}</strong>
         <span>{music.artist}</span>
-        <div className="music-progress"><i style={{ width: `${progress}%` }} /></div>
+        {music.playable ? <div className="music-progress"><i style={{ width: `${progress}%` }} /></div> : <small className="muted">{music.platformName}</small>}
       </div>
-      <input className="volume" type="range" min="0" max="1" step="0.05" value={volume} onChange={(e) => setVolume(Number(e.target.value))} aria-label="Volume" />
+      {music.playable && <input className="volume" type="range" min="0" max="1" step="0.05" value={volume} onChange={(e) => setVolume(Number(e.target.value))} aria-label="Volume" />}
       {profile.music_equalizer_enabled !== false && <MusicEqualizer playing={playing} />}
-      {!music.playable && music.externalUrl && <MusicFallbackButton href={music.externalUrl} text={music.fallbackText || 'open music'} />}
+      {!music.playable && music.externalUrl && <MusicPlatformButton href={music.externalUrl} label={music.openLabel || music.fallbackText || 'Open music'} icon={music.icon} />}
       {error && <small className="soft-error">{error}</small>}
     </div>
   )

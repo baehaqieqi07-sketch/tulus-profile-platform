@@ -1,0 +1,1 @@
+export default function CursorStylePicker({ value='Blue Ring', onChange }) { return <select value={value} onChange={(e)=>onChange?.(e.target.value)}>{['Soft Dot','Blue Ring','Pearl Cursor','Glass Cursor','Minimal Cursor','Premium Glow'].map(x=><option key={x}>{x}</option>)}</select> }

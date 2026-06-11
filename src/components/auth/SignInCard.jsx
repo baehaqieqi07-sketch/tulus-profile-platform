@@ -13,7 +13,7 @@ export default function SignInCard({ onLogin, onSuccess }) {
   const [message, setMessage] = useState('')
   const [loading, setLoading] = useState(false)
   const needsCaptcha = fails >= 3
-  const ownerEmail = (import.meta.env.VITE_OWNER_EMAIL || '').toLowerCase()
+  const ownerEmail = (import.meta.env.VITE_OWNER_EMAIL || import.meta.env.OWNER_EMAIL || '').toLowerCase()
 
   const submit = async (e) => {
     e.preventDefault()
@@ -48,4 +48,3 @@ export default function SignInCard({ onLogin, onSuccess }) {
     </form>
   )
 }
-

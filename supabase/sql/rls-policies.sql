@@ -1,4 +1,6 @@
--- Enable Row Level Security
+-- TULUS RLS POLICIES - SAFE / IDEMPOTENT
+-- Aman dijalankan ulang. Tidak menghapus data user.
+
 alter table public.profiles enable row level security;
 alter table public.social_links enable row level security;
 alter table public.badges enable row level security;
@@ -11,6 +13,62 @@ alter table public.analytics_events enable row level security;
 alter table public.user_roles enable row level security;
 alter table public.activity_logs enable row level security;
 alter table public.platform_settings enable row level security;
+alter table if exists public.music_recommendations enable row level security;
+alter table if exists public.app_links enable row level security;
+
+-- Drop policies first so this file can be rerun safely.
+drop policy if exists "public can read visible profiles" on public.profiles;
+drop policy if exists "users can read own profile" on public.profiles;
+drop policy if exists "users can insert own profile" on public.profiles;
+drop policy if exists "users can update own profile" on public.profiles;
+drop policy if exists "owners can manage profiles" on public.profiles;
+
+drop policy if exists "public read active links" on public.social_links;
+drop policy if exists "users manage own links" on public.social_links;
+drop policy if exists "owners manage links" on public.social_links;
+
+drop policy if exists "public read active badges" on public.badges;
+drop policy if exists "users manage own badges" on public.badges;
+drop policy if exists "owners manage badges" on public.badges;
+
+drop policy if exists "public read active quotes" on public.quotes;
+drop policy if exists "users manage own quotes" on public.quotes;
+drop policy if exists "owners manage quotes" on public.quotes;
+
+drop policy if exists "public read active gallery" on public.gallery_items;
+drop policy if exists "users manage own gallery" on public.gallery_items;
+drop policy if exists "owners manage gallery" on public.gallery_items;
+
+drop policy if exists "users read own subscription" on public.subscriptions;
+drop policy if exists "owners manage subscriptions" on public.subscriptions;
+
+drop policy if exists "users read own payments" on public.payments;
+drop policy if exists "users create own payments" on public.payments;
+drop policy if exists "owners manage payments" on public.payments;
+
+drop policy if exists "any auth user can create report" on public.reports;
+drop policy if exists "moderators read reports" on public.reports;
+drop policy if exists "moderators update reports" on public.reports;
+
+drop policy if exists "users read own analytics" on public.analytics_events;
+drop policy if exists "public can insert safe analytics" on public.analytics_events;
+drop policy if exists "owners read analytics" on public.analytics_events;
+
+drop policy if exists "users can read own roles" on public.user_roles;
+drop policy if exists "owners manage roles" on public.user_roles;
+
+drop policy if exists "owners read activity logs" on public.activity_logs;
+drop policy if exists "service or owner insert logs" on public.activity_logs;
+
+drop policy if exists "owners manage settings" on public.platform_settings;
+drop policy if exists "public read safe settings" on public.platform_settings;
+
+drop policy if exists "active music recommendations are readable" on public.music_recommendations;
+drop policy if exists "owners manage music recommendations" on public.music_recommendations;
+
+drop policy if exists "public read active app links" on public.app_links;
+drop policy if exists "users manage own app links" on public.app_links;
+drop policy if exists "owners manage app links" on public.app_links;
 
 -- Profiles
 create policy "public can read visible profiles" on public.profiles for select using (visibility = 'public' and is_suspended = false);
@@ -36,6 +94,11 @@ create policy "public read active gallery" on public.gallery_items for select us
 create policy "users manage own gallery" on public.gallery_items for all using (auth.uid() = user_id) with check (auth.uid() = user_id);
 create policy "owners manage gallery" on public.gallery_items for all using (public.is_owner(auth.uid())) with check (public.is_owner(auth.uid()));
 
+-- App links
+create policy "public read active app links" on public.app_links for select using (is_active = true and exists(select 1 from public.profiles p where p.user_id = app_links.user_id and p.visibility = 'public' and p.is_suspended = false));
+create policy "users manage own app links" on public.app_links for all using (auth.uid() = user_id) with check (auth.uid() = user_id);
+create policy "owners manage app links" on public.app_links for all using (public.is_owner(auth.uid())) with check (public.is_owner(auth.uid()));
+
 -- Subscriptions and payments
 create policy "users read own subscription" on public.subscriptions for select using (auth.uid() = user_id);
 create policy "owners manage subscriptions" on public.subscriptions for all using (public.is_owner(auth.uid())) with check (public.is_owner(auth.uid()));
@@ -51,7 +114,7 @@ create policy "moderators update reports" on public.reports for update using (pu
 
 -- Analytics
 create policy "users read own analytics" on public.analytics_events for select using (auth.uid() = user_id);
-create policy "public can insert safe analytics" on public.analytics_events for insert with check (event_type in ('profile_view','link_click'));
+create policy "public can insert safe analytics" on public.analytics_events for insert with check (event_type in ('profile_view','link_click','app_click'));
 create policy "owners read analytics" on public.analytics_events for select using (public.is_owner(auth.uid()));
 
 -- Roles and logs
@@ -64,16 +127,6 @@ create policy "service or owner insert logs" on public.activity_logs for insert 
 create policy "owners manage settings" on public.platform_settings for all using (public.is_owner(auth.uid())) with check (public.is_owner(auth.uid()));
 create policy "public read safe settings" on public.platform_settings for select using (key in ('public_theme_list','pricing_public'));
 
--- Music recommendations RLS
-alter table public.music_recommendations enable row level security;
-
-drop policy if exists "active music recommendations are readable" on public.music_recommendations;
-create policy "active music recommendations are readable"
-  on public.music_recommendations for select
-  using (is_active = true);
-
-drop policy if exists "owners manage music recommendations" on public.music_recommendations;
-create policy "owners manage music recommendations"
-  on public.music_recommendations for all
-  using (public.is_owner(auth.uid()))
-  with check (public.is_owner(auth.uid()));
+-- Music recommendations
+create policy "active music recommendations are readable" on public.music_recommendations for select using (is_active = true);
+create policy "owners manage music recommendations" on public.music_recommendations for all using (public.is_owner(auth.uid())) with check (public.is_owner(auth.uid()));

@@ -1,4 +1,5 @@
 import { useMemo, useState } from 'react'
+import { saveProfile } from '../lib/profileStore.js'
 import QuickEdit from '../components/QuickEdit.jsx'
 import AdvancedEdit from '../components/AdvancedEdit.jsx'
 import ProfileEditor from '../components/ProfileEditor.jsx'
@@ -23,9 +24,13 @@ const menus = ['Quick Edit', 'Profile', 'Background', 'Avatar', 'Music', 'Links'
 export default function Dashboard({ user, profile, setProfile, links, setLinks, badges, setBadges, quotes, setQuotes, gallery, setGallery, payments, setPayments, saveAll }) {
   const [active, setActive] = useState('Quick Edit')
   const [saved, setSaved] = useState('')
-  const onSave = () => { saveAll?.(); setSaved('Saved softly.') }
+  const onSave = async () => {
+    saveAll?.()
+    const result = await saveProfile(profile, user?.id)
+    setSaved(result.ok ? 'Saved to TULUS.' : 'Saved locally. Check Supabase setup if it does not update online.')
+  }
   const editor = useMemo(() => {
-    const props = { profile, setProfile, links, setLinks, badges, setBadges, quotes, setQuotes, gallery, setGallery, payments, setPayments, onSave }
+    const props = { user, profile, setProfile, links, setLinks, badges, setBadges, quotes, setQuotes, gallery, setGallery, payments, setPayments, onSave }
     switch (active) {
       case 'Profile': return <ProfileEditor {...props} />
       case 'Background': return <BackgroundEditor {...props} />

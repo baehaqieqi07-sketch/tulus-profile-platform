@@ -1,0 +1,1 @@
+export default function ButtonEffectPicker({ value='Soft ripple', onChange }) { return <select value={value} onChange={(e)=>onChange?.(e.target.value)}>{['Soft ripple','Tiny star burst','Blue glow pulse','Pearl shimmer','Button press depth'].map(x=><option key={x}>{x}</option>)}</select> }

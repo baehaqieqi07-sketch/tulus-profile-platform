@@ -1,0 +1,1 @@
+export default function LanguageSwitcher({ value = 'en', onChange }) { return <div className="language-switch"><button className={value === 'id' ? 'active' : ''} onClick={() => onChange?.('id')}>ID</button><button className={value === 'en' ? 'active' : ''} onClick={() => onChange?.('en')}>EN</button></div> }

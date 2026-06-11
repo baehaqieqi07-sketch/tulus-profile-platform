@@ -567,3 +567,27 @@ supabase/functions/create-music-recommendation/index.ts
 supabase/functions/update-music-recommendation/index.ts
 supabase/functions/delete-music-recommendation/index.ts
 ```
+
+## TULUS Full Platform Update v2
+
+Update ini merapikan alur utama TULUS:
+
+- Auth Gate `/auth`, `/login`, `/register`
+- Public profile `/:username`
+- Dashboard `/dashboard`
+- Owner panel tersembunyi `/tulus-control`
+- Click-to-enter sebelum profile experience
+- Music system clean:
+  - Direct audio `.mp3/.wav/.ogg/.m4a/.aac/.flac` bisa play setelah click-to-enter
+  - YouTube, YouTube Music, Spotify, TikTok, SoundCloud, Apple Music, Instagram, Deezer, Joox tampil sebagai tombol external
+  - Upload audio ke Supabase Storage bucket `profile-music`
+- Supabase public profile loading
+- Dashboard profile save ke Supabase
+- SQL schema + safe migration
+- Storage policies
+- Edge Function scaffold untuk payment, owner action, report, tracking, dan music recommendation
+
+Baca `CARA_PASANG_FULL_UPDATE.md` untuk langkah paling gampang dari awal sampai web aktif.
+
+### Catatan jujur produksi
+Payment gateway otomatis tetap perlu key asli dari Midtrans/Xendit/Duitku/Stripe dan verifikasi webhook sesuai provider. File function sudah disiapkan sebagai scaffold aman, tapi jangan dianggap pembayaran otomatis aktif sebelum provider key dipasang dan dites.

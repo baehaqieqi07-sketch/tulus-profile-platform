@@ -1,0 +1,22 @@
+TULUS FULL MERGED FIXED
+
+Ini versi gabungan project lama + update baru yang sudah dirapikan.
+Fokusnya supaya kamu tidak perlu mikir patch satu-satu lagi.
+
+Isi utama:
+- Auth Gate /auth, /login, /register
+- Click To Enter
+- Public profile /:username ambil data Supabase
+- Dashboard /dashboard
+- Owner panel /tulus-control
+- Clean music link system
+- Direct MP3 play di TULUS
+- YouTube/Spotify/TikTok jadi tombol external
+- Upload file via Supabase Storage
+- SQL safe migration
+- RLS policies safe rerun
+- Storage policies safe rerun
+- Owner/profile bekiw setup SQL
+
+Jangan upload .env yang berisi secret.
+Pakai .env.example sebagai contoh saja.

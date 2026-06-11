@@ -1,0 +1,1 @@
+export default function UploadButton({ label = 'Choose file', accept = '*', onPick }) { return <label className="upload-soft">{label}<input type="file" accept={accept} onChange={(e) => onPick?.(e.target.files?.[0])} /></label> }
