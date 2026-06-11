@@ -1,5 +1,5 @@
 import { useMemo, useState } from 'react'
-import { saveProfile } from '../lib/profileStore.js'
+import { saveDashboardBundle } from '../lib/profileStore.js'
 import QuickEdit from '../components/QuickEdit.jsx'
 import AdvancedEdit from '../components/AdvancedEdit.jsx'
 import ProfileEditor from '../components/ProfileEditor.jsx'
@@ -26,8 +26,8 @@ export default function Dashboard({ user, profile, setProfile, links, setLinks, 
   const [saved, setSaved] = useState('')
   const onSave = async () => {
     saveAll?.()
-    const result = await saveProfile(profile, user?.id)
-    setSaved(result.ok ? 'Saved to TULUS.' : 'Saved locally. Check Supabase setup if it does not update online.')
+    const result = await saveDashboardBundle(user?.id, { profile, links, badges, quotes, gallery })
+    setSaved(result.ok ? 'Saved to TULUS.' : (result?.error?.message || 'Saved locally. Check Supabase setup if it does not update online.'))
   }
   const editor = useMemo(() => {
     const props = { user, profile, setProfile, links, setLinks, badges, setBadges, quotes, setQuotes, gallery, setGallery, payments, setPayments, onSave }

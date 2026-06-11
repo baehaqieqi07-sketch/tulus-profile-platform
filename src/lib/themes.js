@@ -1,4 +1,14 @@
 export const THEMES = {
+  'Orang Tulus Blue Glass': {
+    name: 'Orang Tulus Blue Glass',
+    free: true,
+    background: 'radial-gradient(circle at 18% 18%, rgba(143,183,255,.55), transparent 34%), radial-gradient(circle at 82% 18%, rgba(200,184,255,.40), transparent 30%), linear-gradient(135deg, #DCEAFF 0%, #EEF6FF 42%, #FAFAF7 100%)',
+    accent: '#4F8CFF',
+    text: '#303846',
+    muted: '#627089',
+    card: 'rgba(255,255,255,.34)',
+    glow: 'rgba(79,140,255,.22)'
+  },
   'Pearl Calm': {
     name: 'Pearl Calm',
     free: true,
@@ -71,9 +81,9 @@ export const THEMES = {
   'Midnight Glass': { name: 'Midnight Glass', free: false, background: 'linear-gradient(135deg, #10131c, #1f2633, #151720)', accent: '#b6d9ff', text: '#f7fbff', muted: '#ccd8e3', card: 'rgba(255,255,255,.12)', glow: 'rgba(182,217,255,.28)' }
 }
 
-export const DEFAULT_THEME = THEMES['Pearl Calm']
+export const DEFAULT_THEME = THEMES['Orang Tulus Blue Glass']
 
-export function themeVars(themeName = 'Pearl Calm') {
+export function themeVars(themeName = 'Orang Tulus Blue Glass') {
   const t = THEMES[themeName] || DEFAULT_THEME
   return {
     '--bg': t.background,

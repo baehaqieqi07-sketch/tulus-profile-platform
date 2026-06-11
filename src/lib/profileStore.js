@@ -128,6 +128,80 @@ export async function ensureStarterProfile(user, draftProfile = {}) {
   return loadUserBundle(user.id)
 }
 
+export async function saveUserLists(userId, { links = [], badges = [], quotes = [], gallery = [] } = {}) {
+  if (!supabaseReady || !userId) return { ok: false, localOnly: true }
+
+  const cleanLinks = links
+    .filter((item) => item?.label && item?.url)
+    .map((item, index) => ({
+      user_id: userId,
+      label: cleanText(item.label, 32),
+      url: String(item.url || '').trim(),
+      icon: cleanText(item.icon || item.label || 'Website', 32),
+      style: item.style || 'Glass',
+      is_active: item.is_active !== false,
+      sort_order: index + 1
+    }))
+
+  const cleanBadges = badges
+    .filter((item) => item?.label)
+    .map((item, index) => ({
+      user_id: userId,
+      label: cleanText(item.label, 20),
+      color: item.color || '#DCEAFF',
+      style: item.style || 'glass',
+      is_active: item.is_active !== false,
+      sort_order: index + 1
+    }))
+
+  const cleanQuotes = quotes
+    .filter((item) => item?.text)
+    .map((item, index) => ({
+      user_id: userId,
+      text: cleanText(item.text, 160),
+      animation: item.animation || 'fade',
+      is_active: item.is_active !== false,
+      sort_order: index + 1
+    }))
+
+  const cleanGallery = gallery
+    .filter((item) => item?.title || item?.image_url)
+    .map((item, index) => ({
+      user_id: userId,
+      title: cleanText(item.title || `photo ${index + 1}`, 80),
+      image_url: item.image_url || '',
+      is_active: item.is_active !== false,
+      sort_order: index + 1
+    }))
+
+  const tables = [
+    ['social_links', cleanLinks],
+    ['badges', cleanBadges],
+    ['quotes', cleanQuotes],
+    ['gallery_items', cleanGallery]
+  ]
+
+  for (const [table, rows] of tables) {
+    const del = await supabase.from(table).delete().eq('user_id', userId)
+    if (del.error) return { ok: false, error: del.error }
+    if (rows.length) {
+      const ins = await supabase.from(table).insert(rows)
+      if (ins.error) return { ok: false, error: ins.error }
+    }
+  }
+
+  return { ok: true }
+}
+
+export async function saveDashboardBundle(userId, bundle = {}) {
+  if (!supabaseReady || !userId) return { ok: false, localOnly: true }
+  const profileResult = await saveProfile(bundle.profile || {}, userId)
+  if (!profileResult.ok) return profileResult
+  const listResult = await saveUserLists(userId, bundle)
+  if (!listResult.ok) return listResult
+  return { ok: true, profile: profileResult.profile }
+}
+
 function safeFileName(name = 'file') {
   return String(name).toLowerCase().replace(/[^a-z0-9._-]/g, '-').replace(/-+/g, '-').slice(0, 80)
 }

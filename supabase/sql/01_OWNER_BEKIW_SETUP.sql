@@ -19,7 +19,12 @@ insert into public.profiles (
   show_music,
   music_source_type,
   theme_name,
-  accent_color
+  accent_color,
+  music_title,
+  music_artist,
+  music_url,
+  music_external_url,
+  music_fallback_text
 )
 select
   id,
@@ -28,9 +33,14 @@ select
   'just a quiet page for the things i like.',
   'public'::public.profile_visibility,
   true,
-  'none',
-  'Pearl Calm',
-  '#4F8CFF'
+  'external_platform',
+  'Orang Tulus Blue Glass',
+  '#4F8CFF',
+  'Quiet Link',
+  'YouTube',
+  'https://www.youtube.com/',
+  'https://www.youtube.com/',
+  'Open on YouTube'
 from auth.users
 where email = 'baehaqieqi07@gmail.com'
 on conflict (username) do update set
@@ -38,6 +48,14 @@ on conflict (username) do update set
   bio = excluded.bio,
   visibility = 'public'::public.profile_visibility,
   show_music = true,
+  music_source_type = 'external_platform',
+  theme_name = 'Orang Tulus Blue Glass',
+  accent_color = '#4F8CFF',
+  music_title = coalesce(nullif(public.profiles.music_title, ''), 'Quiet Link'),
+  music_artist = coalesce(nullif(public.profiles.music_artist, ''), 'YouTube'),
+  music_url = coalesce(nullif(public.profiles.music_url, ''), 'https://www.youtube.com/'),
+  music_external_url = coalesce(nullif(public.profiles.music_external_url, ''), 'https://www.youtube.com/'),
+  music_fallback_text = coalesce(nullif(public.profiles.music_fallback_text, ''), 'Open on YouTube'),
   updated_at = now();
 
 insert into public.badges (user_id, label, color, style, is_active, sort_order)
