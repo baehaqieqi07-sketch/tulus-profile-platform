@@ -1,9 +1,52 @@
 import V7DashboardShell from '../components/V7DashboardShell.jsx'
 import BekiwAIChat from '../components/BekiwAIChat.jsx'
+import BrandIcon from '../components/BrandIcon.jsx'
 import { useTulusLanguage } from '../lib/i18n.js'
+
+const quick = [
+  ['Customize profile', '/customize', 'Edit avatar, bio, background, theme.'],
+  ['Manage links', '/links', 'Tambah Discord, Instagram, Roblox, Spotify, dan lainnya.'],
+  ['Open games', '/games', 'Main Focus Rush, Memory Pulse, Aura Clash, Word Flow.'],
+  ['Help center', '/help', 'Tanya bekiw kalau ada error atau bingung.']
+]
 
 export default function AccountDashboard({ user, profile }) {
   const { t } = useTulusLanguage()
-  const checklist = ['Upload avatar', 'Add description', 'Add socials', 'Choose background', 'Pick music', 'Set language', 'Try Game Center', 'Check analytics']
-  return <V7DashboardShell user={user} profile={profile} active="Overview"><div className="v100-dash-head million-dash-head"><div><p className="v100-kicker">{t('account')}</p><h1>Overview</h1><p>Everything important is grouped here: identity, views, completion, games, AI helper, and shortcuts.</p></div><a className="v100-primary" href={`/${profile?.username || 'bekiw'}`}>{t('openProfile')}</a></div><section className="v100-overview-grid million-overview-grid"><article><small>Username</small><b>{profile?.username || 'bekiw'}</b><span>public URL active</span></article><article><small>Plan</small><b>{profile?.plan || 'Free'}</b><span>upgrade anytime</span></article><article><small>Score</small><b>8,240</b><span>games + profile</span></article><article><small>{t('profileViews')}</small><b>{profile?.views || 0}</b><span>visible if enabled</span></article></section><section className="v100-completion million-completion"><div><h2>{t('completeProfile')}</h2><p>Keep it simple: avatar, description, links, background, music, language, and effects.</p></div><div className="v100-checks">{checklist.map((x, i) => <a href={i===6?'/games':'/customize'} key={x} className={i < 4 ? 'done' : ''}>◆ {x}</a>)}</div></section><section className="v100-dashboard-grid million-dashboard-grid"><article className="v100-panel"><h2>Views this week</h2><div className="v100-line-chart"><em/><em/><em/><em/><em/><em/><em/></div></article><article className="v100-panel"><h2>{t('gameCenter')}</h2><p>Focus Tap, Memory Light, Aura Match, and Word Flow are ready for quick engagement.</p><a className="v100-secondary" href="/games">Open games</a></article><article className="v100-panel"><h2>bekiw AI shortcut</h2><BekiwAIChat compact /></article></section></V7DashboardShell>
+  const username = profile?.username || 'bekiw'
+  return (
+    <V7DashboardShell user={user} profile={profile} active="Overview">
+      <header className="ot-dash-hero">
+        <div>
+          <p className="ot-kicker">Dashboard Studio</p>
+          <h1>Semua kontrol TULUS ada di sini.</h1>
+          <p>Profile, links, music, effects, analytics, premium, dan help center dibuat jadi satu workspace yang rapi.</p>
+          <div className="ot-actions"><a className="ot-btn ot-btn-primary" href="/customize">Customize</a><a className="ot-btn ot-btn-soft" href={`/${username}`}>Open /{username}</a></div>
+        </div>
+        <aside className="ot-dashboard-preview">
+          <div className="ot-avatar-big">{(profile?.display_name || username).slice(0,1).toUpperCase()}</div>
+          <h2>{profile?.display_name || username}</h2>
+          <span>@{username}</span>
+          <p>{profile?.bio || 'quiet profile space.'}</p>
+          <div>{['discord','instagram','roblox','spotify','youtube'].map((x)=><i key={x}><BrandIcon name={x} size={18}/></i>)}</div>
+        </aside>
+      </header>
+
+      <section className="ot-stat-grid">
+        <article><small>Public profile</small><b>/{username}</b><span>Ready to share</span></article>
+        <article><small>Plan</small><b>{profile?.plan || 'Free'}</b><span>Upgrade kapan saja</span></article>
+        <article><small>{t('profileViews') || 'Views'}</small><b>{Number(profile?.views || 0).toLocaleString()}</b><span>Cooldown protected</span></article>
+        <article><small>Completion</small><b>82%</b><span>Avatar, links, music, theme</span></article>
+      </section>
+
+      <section className="ot-quick-grid">
+        {quick.map(([title, href, body]) => <a href={href} key={title} className="ot-glass-card"><b>{title}</b><p>{body}</p><span>Open →</span></a>)}
+      </section>
+
+      <section className="ot-dashboard-grid">
+        <article className="ot-glass-card ot-chart-card"><h2>Views this week</h2><div className="ot-bars">{[30,62,44,78,52,88,70].map((h,i)=><i key={i} style={{height:`${h}%`}} />)}</div></article>
+        <article className="ot-glass-card"><h2>Next best step</h2><p>Tambah background yang bagus, rapihin bio pendek, lalu isi 5–8 social links utama. Jangan kebanyakan teks.</p><a className="ot-btn ot-btn-soft" href="/customize">Fix profile</a></article>
+        <article className="ot-glass-card ot-ai-card"><h2>bekiw AI</h2><BekiwAIChat compact /></article>
+      </section>
+    </V7DashboardShell>
+  )
 }

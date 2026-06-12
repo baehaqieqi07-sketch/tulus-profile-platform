@@ -6,7 +6,8 @@ import './styles/animations.css'
 import './styles/effects.css'
 import './styles.css'
 import './styles/final-polish.css'
-import './styles/premium-system.css'
+import './styles/luxury-rebuild.css'
+import './styles/emergency-luxury-redesign.css'
 
 createRoot(document.getElementById('root')).render(
   <React.StrictMode>

@@ -1,0 +1,162 @@
+/* TULUS emergency premium redesign - final import. Fix tiny/shifted layout, horizontal overflow, and cheap-looking spacing. */
+:root {
+  --ot-bg0: #020813;
+  --ot-bg1: #06152b;
+  --ot-bg2: #10264c;
+  --ot-glass: rgba(9, 20, 40, .74);
+  --ot-glass-2: rgba(15, 32, 62, .62);
+  --ot-line: rgba(190, 222, 255, .16);
+  --ot-line-strong: rgba(190, 222, 255, .28);
+  --ot-text: #f4f8ff;
+  --ot-muted: rgba(226, 238, 255, .72);
+  --ot-dim: rgba(226, 238, 255, .52);
+  --ot-blue: #7bb7ff;
+  --ot-cyan: #6ee7ff;
+  --ot-violet: #ad9cff;
+  --ot-radius: 28px;
+  --ot-shadow: 0 30px 90px rgba(0, 0, 0, .42);
+}
+
+html, body, #root { width: 100%; min-height: 100%; margin: 0; overflow-x: clip !important; background: var(--ot-bg0) !important; }
+body { color: var(--ot-text) !important; font-size: 16px; line-height: 1.5; background: radial-gradient(circle at 18% 0%, rgba(86, 148, 255, .25), transparent 34%), radial-gradient(circle at 86% 8%, rgba(173, 156, 255, .18), transparent 32%), linear-gradient(180deg, #07162f 0%, #061122 45%, #020813 100%) !important; }
+body::before { content: ''; position: fixed; inset: 0; pointer-events: none; background-image: linear-gradient(rgba(255,255,255,.035) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,.025) 1px, transparent 1px); background-size: 80px 80px; mask-image: linear-gradient(to bottom, #000, transparent 78%); z-index: 0; }
+a, button { -webkit-tap-highlight-color: transparent; }
+img, svg, canvas, video { max-width: 100%; }
+button, input, textarea, select { font: inherit; }
+
+.lux-page-shell, .v100-page, .luxe-page, .ot-page { width: 100% !important; max-width: 100% !important; min-height: 100svh; overflow-x: clip !important; position: relative; padding: 0 !important; background: transparent !important; }
+.tulus-animated-bg, .v100-noise, .v100-grid-glow, .v100-orb, .v100-stars { pointer-events: none; max-width: 100vw !important; overflow: hidden !important; }
+.tulus-animated-bg { position: fixed !important; inset: 0 !important; z-index: 0 !important; }
+.ot-landing > *:not(.tulus-animated-bg):not(.tulus-cursor):not(.tulus-cursor-ring):not(.v100-noise):not(.v100-grid-glow):not(.v100-orb):not(.v100-stars) { position: relative; z-index: 2; }
+
+/* NAV */
+.tulus-luxe-nav { position: sticky !important; top: 14px !important; left: auto !important; right: auto !important; transform: none !important; z-index: 80 !important; width: min(1180px, calc(100% - 32px)) !important; max-width: 1180px !important; min-height: 68px !important; margin: 14px auto 0 !important; padding: 10px 12px 10px 18px !important; display: grid !important; grid-template-columns: auto minmax(0,1fr) auto !important; align-items: center !important; gap: 14px !important; border-radius: 999px !important; background: rgba(5, 13, 27, .78) !important; border: 1px solid var(--ot-line) !important; box-shadow: 0 22px 70px rgba(0,0,0,.38), inset 0 1px 0 rgba(255,255,255,.08) !important; backdrop-filter: blur(22px) !important; }
+.tulus-luxe-brand { display: inline-flex !important; align-items: center !important; min-width: max-content !important; color: #fff !important; }
+.tulus-luxe-nav-links, .tulus-luxe-nav-actions { display: flex !important; align-items: center !important; justify-content: center !important; gap: 8px !important; min-width: 0 !important; flex-wrap: nowrap !important; }
+.tulus-luxe-nav-links a, .tulus-luxe-login, .tulus-luxe-create { min-height: 42px !important; padding: 0 15px !important; border-radius: 999px !important; font-size: 13px !important; font-weight: 800 !important; color: rgba(240,247,255,.76) !important; white-space: nowrap !important; }
+.tulus-luxe-nav-links a:hover, .tulus-luxe-login:hover { background: rgba(255,255,255,.08) !important; color: #fff !important; }
+.tulus-luxe-create, .ot-btn-primary { background: linear-gradient(135deg, #ffffff, #94caff 55%, #bcaaff) !important; color: #061124 !important; box-shadow: 0 16px 46px rgba(123,183,255,.28) !important; }
+
+/* LANDING */
+.ot-hero { width: min(1240px, calc(100% - 40px)) !important; min-height: calc(100svh - 100px) !important; margin: 0 auto !important; padding: clamp(54px, 7vw, 94px) 0 clamp(34px, 5vw, 70px) !important; display: grid !important; grid-template-columns: minmax(0, 1.1fr) minmax(360px, .72fr) !important; align-items: center !important; gap: clamp(34px, 6vw, 82px) !important; }
+.ot-hero-copy { max-width: 780px; }
+.ot-kicker { margin: 0 0 14px !important; color: var(--ot-cyan) !important; letter-spacing: .19em !important; text-transform: uppercase !important; font-size: 12px !important; font-weight: 900 !important; }
+.ot-hero h1 { margin: 0 !important; font-size: clamp(56px, 7.2vw, 108px) !important; line-height: .88 !important; letter-spacing: -.075em !important; color: #fff !important; text-wrap: balance; max-width: 900px !important; }
+.ot-subtitle { max-width: 660px !important; margin: 24px 0 0 !important; color: var(--ot-muted) !important; font-size: clamp(16px, 1.45vw, 20px) !important; line-height: 1.75 !important; }
+.ot-actions { display: flex !important; flex-wrap: wrap !important; gap: 12px !important; margin-top: 28px !important; align-items: center !important; }
+.ot-btn { min-height: 50px !important; padding: 0 22px !important; border-radius: 999px !important; display: inline-flex !important; align-items: center !important; justify-content: center !important; gap: 10px !important; border: 1px solid var(--ot-line) !important; font-weight: 900 !important; color: #eef7ff !important; }
+.ot-btn-soft { background: rgba(255,255,255,.08) !important; }
+.ot-btn-ghost { background: transparent !important; color: var(--ot-muted) !important; }
+.ot-chip-row { display: flex !important; flex-wrap: wrap !important; gap: 9px !important; margin-top: 22px !important; }
+.ot-chip-row span { padding: 9px 13px !important; border-radius: 999px !important; background: rgba(255,255,255,.055) !important; border: 1px solid rgba(255,255,255,.10) !important; color: rgba(232,242,255,.76) !important; font-size: 12px !important; }
+.ot-phone-preview { min-height: min(620px, calc(100svh - 170px)) !important; border-radius: 44px !important; position: relative !important; overflow: hidden !important; background: radial-gradient(circle at 34% 18%, rgba(123,183,255,.48), transparent 26%), radial-gradient(circle at 78% 22%, rgba(173,156,255,.32), transparent 28%), linear-gradient(160deg, rgba(22,44,88,.84), rgba(4,9,21,.94)) !important; border: 1px solid rgba(190,222,255,.18) !important; box-shadow: var(--ot-shadow) !important; display: grid !important; place-items: center !important; }
+.ot-phone-glow { position: absolute; inset: 16px; border: 1px solid rgba(255,255,255,.12); border-radius: 34px; box-shadow: inset 0 0 70px rgba(123,183,255,.13); }
+.ot-phone-card { position: relative; width: min(380px, calc(100% - 44px)); text-align: center; padding: 30px 22px; border-radius: 34px; background: rgba(4, 10, 22, .52); border: 1px solid rgba(255,255,255,.16); backdrop-filter: blur(24px); box-shadow: 0 22px 70px rgba(0,0,0,.28); }
+.ot-avatar { width: 112px; height: 112px; border-radius: 30px; display: grid; place-items: center; margin: 0 auto 16px; background: linear-gradient(135deg, rgba(255,255,255,.14), rgba(123,183,255,.12)); border: 1px solid rgba(255,255,255,.18); }
+.ot-phone-card h2 { margin: 0; font-size: 42px; letter-spacing: -.05em; }
+.ot-phone-card p, .ot-phone-card span { color: var(--ot-muted); }
+.ot-mini { margin: 0 0 5px !important; color: var(--ot-cyan) !important; font-weight: 800; }
+.ot-socials { display: flex; justify-content: center; flex-wrap: wrap; gap: 10px; margin: 18px 0; }
+.ot-socials i { width: 46px; height: 46px; border-radius: 16px; display: grid; place-items: center; background: rgba(255,255,255,.08); border: 1px solid rgba(255,255,255,.12); }
+.ot-phone-card button { min-height: 46px; border: 0; padding: 0 22px; border-radius: 999px; background: #fff; color: #07111f; font-weight: 950; }
+.ot-brand-strip, .ot-section, .ot-footer { width: min(1240px, calc(100% - 40px)) !important; margin-left: auto !important; margin-right: auto !important; }
+.ot-brand-strip { display: grid !important; grid-template-columns: repeat(8, minmax(0, 1fr)) !important; gap: 10px !important; margin-top: 0 !important; }
+.ot-brand-strip article { min-height: 84px; display: grid; place-items: center; gap: 7px; text-align: center; text-transform: capitalize; color: var(--ot-muted); border-radius: 22px; background: rgba(255,255,255,.055); border: 1px solid rgba(255,255,255,.10); }
+.ot-section { padding: clamp(42px, 6vw, 88px) 0 !important; }
+.ot-section-head { max-width: 760px; margin-bottom: 22px; }
+.ot-section h2, .ot-showcase-panel h2 { margin: 0; font-size: clamp(36px, 5vw, 70px); line-height: .96; letter-spacing: -.055em; color: #fff; }
+.ot-feature-grid { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 14px; }
+.ot-glass-card { border-radius: 28px !important; padding: 24px !important; background: linear-gradient(150deg, rgba(255,255,255,.105), rgba(255,255,255,.045)) !important; border: 1px solid var(--ot-line) !important; box-shadow: 0 24px 70px rgba(0,0,0,.28) !important; color: var(--ot-text) !important; overflow: hidden; }
+.ot-glass-card b { font-size: 20px; color: #fff; }
+.ot-glass-card p { color: var(--ot-muted); line-height: 1.65; }
+.ot-showcase-panel { display: grid; grid-template-columns: minmax(0,.85fr) minmax(0,1fr); gap: 22px; align-items: center; padding: clamp(24px, 4vw, 42px) !important; border-radius: 38px; background: linear-gradient(140deg, rgba(255,255,255,.09), rgba(255,255,255,.035)); border: 1px solid var(--ot-line); }
+.ot-showcase-panel p { color: var(--ot-muted); line-height: 1.7; }
+.ot-flow-list { display: grid; grid-template-columns: repeat(3, minmax(0,1fr)); gap: 12px; }
+.ot-flow-list span { min-height: 92px; display: grid; gap: 10px; padding: 16px; border-radius: 22px; background: rgba(255,255,255,.065); border: 1px solid rgba(255,255,255,.10); }
+.ot-flow-list b { width: 32px; height: 32px; display: grid; place-items: center; border-radius: 999px; background: rgba(123,183,255,.18); color: var(--ot-cyan); }
+.ot-footer { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 16px; padding: 28px 0 44px; border-top: 1px solid rgba(255,255,255,.08); color: var(--ot-muted); }
+.ot-footer nav { display: flex; gap: 16px; flex-wrap: wrap; }
+
+/* DASHBOARD */
+.ot-dashboard-shell { display: grid !important; grid-template-columns: 290px minmax(0,1fr) !important; min-height: 100svh !important; background: radial-gradient(circle at 16% 0%, rgba(80,143,255,.22), transparent 30%), linear-gradient(135deg, #050b16, #071831 62%, #030711) !important; color: var(--ot-text) !important; }
+.ot-dashboard-side { position: sticky !important; top: 0 !important; height: 100svh !important; overflow-y: auto !important; padding: 22px 18px !important; background: rgba(5,13,27,.76) !important; border-right: 1px solid rgba(255,255,255,.09) !important; backdrop-filter: blur(24px) !important; }
+.ot-side-logo { margin-bottom: 18px !important; }
+.ot-side-profile { display: flex !important; align-items: center !important; gap: 12px !important; margin-bottom: 16px !important; padding: 12px !important; border-radius: 22px !important; background: rgba(255,255,255,.07) !important; border: 1px solid rgba(255,255,255,.10) !important; }
+.ot-side-profile span { width: 46px !important; height: 46px !important; display: grid !important; place-items: center !important; border-radius: 16px !important; background: linear-gradient(135deg, #fff, #8fc6ff) !important; color: #061124 !important; font-weight: 950 !important; }
+.ot-side-profile b, .ot-side-profile small { display: block; }
+.ot-side-profile small { color: var(--ot-muted); }
+.ot-side-menu { display: grid !important; gap: 12px !important; margin-top: 14px !important; }
+.ot-side-menu section { display: grid; gap: 6px; }
+.ot-side-menu p { margin: 14px 0 4px !important; color: var(--ot-cyan) !important; text-transform: uppercase; letter-spacing: .16em; font-size: 11px; font-weight: 900; }
+.ot-side-menu a { min-height: 42px !important; display: flex !important; align-items: center !important; padding: 0 14px !important; border-radius: 15px !important; color: var(--ot-muted) !important; font-weight: 750; }
+.ot-side-menu a.active, .ot-side-menu a:hover { color: #fff !important; background: rgba(255,255,255,.085) !important; }
+.ot-side-help { margin-top: 18px !important; padding: 16px !important; border-radius: 22px !important; background: rgba(123,183,255,.12) !important; border: 1px solid rgba(123,183,255,.18) !important; display: grid !important; gap: 8px !important; }
+.ot-side-help span { color: var(--ot-muted); font-size: 13px; line-height: 1.5; }
+.ot-side-share { margin-top: 12px !important; min-height: 46px !important; display: grid !important; place-items: center !important; border-radius: 999px !important; background: linear-gradient(135deg, #fff, #8fc6ff) !important; color: #061124 !important; font-weight: 950 !important; }
+.ot-dashboard-workspace { min-width: 0 !important; padding: clamp(18px,3vw,34px) !important; }
+.ot-dashboard-workspace > * { width: min(1240px, 100%); margin-left: auto; margin-right: auto; }
+.ot-dash-hero { display: grid !important; grid-template-columns: minmax(0,1fr) minmax(300px,.42fr) !important; gap: 18px !important; align-items: stretch !important; margin-bottom: 18px !important; }
+.ot-dash-hero > div, .ot-dashboard-preview { border-radius: 34px !important; padding: clamp(22px,3vw,34px) !important; background: linear-gradient(150deg, rgba(255,255,255,.10), rgba(255,255,255,.045)) !important; border: 1px solid var(--ot-line) !important; box-shadow: 0 22px 70px rgba(0,0,0,.24); }
+.ot-dash-hero h1 { margin: 0 !important; color: #fff !important; font-size: clamp(38px,5vw,74px) !important; line-height: .95 !important; letter-spacing: -.06em !important; max-width: 820px; }
+.ot-dash-hero p { color: var(--ot-muted); line-height: 1.65; max-width: 700px; }
+.ot-dashboard-preview { text-align: center; display: grid; align-content: center; justify-items: center; gap: 8px; }
+.ot-avatar-big { width: 92px; height: 92px; display: grid; place-items: center; border-radius: 28px; background: linear-gradient(135deg, #fff, #8fc6ff); color: #061124; font-size: 34px; font-weight: 950; box-shadow: 0 0 60px rgba(123,183,255,.24); }
+.ot-dashboard-preview h2 { margin: 8px 0 0; font-size: 30px; }
+.ot-dashboard-preview span { color: var(--ot-cyan); font-weight: 800; }
+.ot-dashboard-preview p { color: var(--ot-muted); text-align: center; }
+.ot-dashboard-preview div:last-child { display: flex; flex-wrap: wrap; justify-content: center; gap: 8px; }
+.ot-dashboard-preview i { width: 42px; height: 42px; border-radius: 14px; display: grid; place-items: center; background: rgba(255,255,255,.08); border: 1px solid rgba(255,255,255,.12); }
+.ot-stat-grid { display: grid !important; grid-template-columns: repeat(4, minmax(0,1fr)) !important; gap: 14px !important; margin-bottom: 18px !important; }
+.ot-stat-grid article { min-height: 118px !important; border-radius: 26px !important; padding: 18px !important; background: rgba(255,255,255,.07) !important; border: 1px solid rgba(255,255,255,.11) !important; }
+.ot-stat-grid small { color: var(--ot-dim); text-transform: uppercase; letter-spacing: .14em; font-weight: 850; }
+.ot-stat-grid b { display: block; margin-top: 9px; font-size: clamp(22px,2.4vw,34px); color: #fff; overflow-wrap: anywhere; }
+.ot-stat-grid span { color: var(--ot-muted); }
+.ot-quick-grid { display: grid; grid-template-columns: repeat(4, minmax(0,1fr)); gap: 14px; margin-bottom: 18px; }
+.ot-quick-grid a { min-height: 170px; display: grid; align-content: space-between; }
+.ot-quick-grid span { color: var(--ot-cyan); font-weight: 900; }
+.ot-dashboard-grid { display: grid; grid-template-columns: minmax(0,1fr) minmax(0,.85fr); gap: 14px; align-items: start; }
+.ot-ai-card { grid-row: span 2; }
+.ot-chart-card { min-height: 320px; }
+.ot-bars { height: 210px; display: flex; align-items: end; gap: 10px; padding-top: 20px; }
+.ot-bars i { flex: 1; min-width: 18px; border-radius: 999px 999px 10px 10px; background: linear-gradient(180deg, #9fe7ff, #5b91ff); box-shadow: 0 0 28px rgba(123,183,255,.18); }
+
+/* Stabilize older pages */
+.luxe-hero, .luxe-app-strip, .luxe-section, .luxe-pricing-hero, .luxe-arcade-hero, .luxe-help-hero-clean, .luxe-plans-grid, .luxe-compare-card, .luxe-help-layout-clean, .luxe-arcade-stats, .luxe-arcade-layout, .v100-workspace, .million-workspace, .lux-custom-layout, .lux-links-studio { max-width: min(1240px, calc(100% - 40px)) !important; margin-left: auto !important; margin-right: auto !important; }
+.glass-card, .v100-panel, .luxe-card, .luxe-plan-card, .luxe-compare-card, .lux-custom-form, .lux-live-preview, .lux-link-form, .lux-link-preview { border-radius: 26px !important; background: linear-gradient(150deg, rgba(255,255,255,.095), rgba(255,255,255,.04)) !important; border-color: var(--ot-line) !important; color: var(--ot-text) !important; }
+input, textarea, select { min-height: 48px !important; border-radius: 16px !important; background: rgba(255,255,255,.075) !important; border: 1px solid rgba(255,255,255,.13) !important; color: #fff !important; }
+textarea { min-height: 120px !important; padding: 12px 14px !important; }
+
+@media (max-width: 1120px) {
+  .tulus-luxe-nav { grid-template-columns: 1fr !important; border-radius: 28px !important; }
+  .tulus-luxe-nav-links, .tulus-luxe-nav-actions { justify-content: flex-start !important; flex-wrap: wrap !important; }
+  .ot-hero, .ot-showcase-panel, .ot-dash-hero, .ot-dashboard-grid { grid-template-columns: 1fr !important; }
+  .ot-phone-preview { min-height: 540px !important; }
+  .ot-feature-grid, .ot-quick-grid, .ot-stat-grid { grid-template-columns: repeat(2, minmax(0,1fr)) !important; }
+  .ot-brand-strip { grid-template-columns: repeat(4, minmax(0,1fr)) !important; }
+  .ot-dashboard-shell { grid-template-columns: 1fr !important; }
+  .ot-dashboard-side { position: relative !important; height: auto !important; border-right: 0 !important; border-bottom: 1px solid rgba(255,255,255,.1) !important; }
+  .ot-side-menu { grid-template-columns: repeat(3, minmax(0,1fr)) !important; }
+}
+@media (max-width: 720px) {
+  .tulus-luxe-nav { width: calc(100% - 20px) !important; top: 8px !important; margin-top: 8px !important; padding: 10px !important; }
+  .tulus-luxe-nav-links { display: none !important; }
+  .tulus-luxe-login { display: none !important; }
+  .tulus-luxe-nav { grid-template-columns: 1fr auto !important; }
+  .ot-hero { width: calc(100% - 24px) !important; min-height: auto !important; padding-top: 44px !important; gap: 24px !important; }
+  .ot-hero h1 { font-size: clamp(42px, 14vw, 68px) !important; }
+  .ot-subtitle { font-size: 15px !important; }
+  .ot-phone-preview { min-height: 470px !important; border-radius: 34px !important; }
+  .ot-brand-strip, .ot-section, .ot-footer { width: calc(100% - 24px) !important; }
+  .ot-brand-strip, .ot-feature-grid, .ot-quick-grid, .ot-stat-grid, .ot-flow-list, .ot-side-menu { grid-template-columns: 1fr !important; }
+  .ot-dashboard-workspace { padding: 14px 12px 28px !important; }
+  .ot-dash-hero h1 { font-size: clamp(34px, 11vw, 52px) !important; }
+  .ot-dashboard-side { padding: 14px 12px !important; }
+  .ot-side-help { display: none !important; }
+  .ot-ai-card { grid-row: auto; }
+}
+@media (max-width: 420px) {
+  .tulus-luxe-create { min-height: 40px !important; padding: 0 12px !important; font-size: 12px !important; }
+  .ot-actions .ot-btn { width: 100% !important; }
+  .ot-phone-card { width: calc(100% - 28px); padding: 24px 16px; }
+  .ot-socials i { width: 42px; height: 42px; }
+}

@@ -3,7 +3,6 @@ dist/
 .env
 .env.local
 .vercel/
-.netlify/
 .vite/
 *.log
 .DS_Store

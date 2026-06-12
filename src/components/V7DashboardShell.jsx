@@ -4,32 +4,31 @@ import TulusLogo from './TulusLogo.jsx'
 import LanguageSwitcher from './LanguageSwitcher.jsx'
 import { useTulusLanguage } from '../lib/i18n.js'
 
-const baseGroups = [
+const groups = [
   { name: 'Account', items: [['Overview', '/account'], ['Analytics', '/account/analytics'], ['Badges', '/account/badges'], ['Settings', '/account/settings']] },
-  { name: 'Create', items: [['Customize', '/customize'], ['Links', '/links'], ['Music', '/customize#music'], ['Effects', '/customize#effects']] },
-  { name: 'Growth', items: [['Premium', '/premium'], ['Leaderboard', '/leaderboard'], ['Games', '/games'], ['Help AI', '/help']] },
-  { name: 'Tools', items: [['Image Host', '/image-host'], ['Templates', '/templates']] }
+  { name: 'Studio', items: [['Customize', '/customize'], ['Links', '/links'], ['Music', '/customize#music'], ['Effects', '/customize#effects']] },
+  { name: 'Growth', items: [['Premium', '/premium'], ['Leaderboard', '/leaderboard'], ['Games', '/games'], ['Help AI', '/help']] }
 ]
 
 export default function V7DashboardShell({ user, profile, active = 'Overview', children }) {
   const { t } = useTulusLanguage()
-  const groups = user?.role === 'owner' ? [...baseGroups, { name: 'Owner', items: [['TULUS Control', '/tulus-control']] }] : baseGroups
+  const username = profile?.username || 'bekiw'
+  const initial = (profile?.display_name || username || 'T').slice(0, 1).toUpperCase()
   return (
     <UserGuard user={user}>
-      <main className="v100-app-shell v500-app-shell million-app-shell">
+      <main className="ot-dashboard-shell luxe-dashboard-shell v100-app-shell v500-app-shell million-app-shell">
         <PremiumCursor />
-        <aside className="v100-side v500-side million-side">
-          <a className="v100-side-logo v500-side-logo" href="/"><TulusLogo /></a>
-          <label className="v100-search"><span>⌕</span><input placeholder="Search features..." /></label>
+        <aside className="ot-dashboard-side luxe-dashboard-side v100-side v500-side million-side">
+          <a className="ot-side-logo luxe-side-logo" href="/"><TulusLogo /></a>
+          <div className="ot-side-profile luxe-side-profile"><span>{initial}</span><div><b>{profile?.display_name || username}</b><small>@{username}</small></div></div>
           <LanguageSwitcher />
-          <div className="v100-side-menu">
+          <nav className="ot-side-menu luxe-side-menu v100-side-menu" aria-label="Dashboard navigation">
             {groups.map((group) => <section key={group.name}><p>{group.name}</p>{group.items.map(([label, href]) => <a key={href} className={active === label ? 'active' : ''} href={href}>{label}</a>)}</section>)}
-          </div>
-          <div className="v100-help-card v500-help-card"><b>{t('askBekiw')}</b><span>bekiw can guide setup, language, games, music, uploads, and profile design.</span><a href="/help">Chat with bekiw</a><a href={`/${profile?.username || 'bekiw'}`}>{t('openProfile')}</a></div>
-          <a className="v100-share" href={`/${profile?.username || 'bekiw'}`}>↗ Share Your Profile</a>
-          <div className="v100-user-mini"><span>{(profile?.display_name || 'b').slice(0,1)}</span><div><b>{profile?.display_name || 'bekiw'}</b><small>{user?.id ? `UID ${String(user.id).slice(0, 8)}` : 'local session'}</small></div><i>•••</i></div>
+          </nav>
+          <div className="ot-side-help luxe-side-help"><b>{t('askBekiw') || 'Ask bekiw'}</b><span>Bantu setup profile, upload, music, link, bahasa, dan bug umum.</span><a href="/help">Open help</a></div>
+          <a className="ot-side-share luxe-side-share" href={`/${username}`}>Open public profile</a>
         </aside>
-        <section className="v100-workspace v500-workspace million-workspace">{children}</section>
+        <section className="ot-dashboard-workspace luxe-dashboard-workspace v100-workspace v500-workspace million-workspace">{children}</section>
       </main>
     </UserGuard>
   )

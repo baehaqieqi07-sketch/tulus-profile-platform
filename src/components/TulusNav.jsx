@@ -2,19 +2,25 @@ import TulusLogo from './TulusLogo.jsx'
 import LanguageSwitcher from './LanguageSwitcher.jsx'
 import { useTulusLanguage } from '../lib/i18n.js'
 
+const navItems = [
+  ['Explore', '/explore'],
+  ['Pricing', '/pricing'],
+  ['Games', '/games'],
+  ['Help', '/help']
+]
+
 export default function TulusNav() {
   const { t } = useTulusLanguage()
   return (
-    <nav className="v500-nav mega-nav">
-      <a className="v500-brand" href="/"><TulusLogo /></a>
-      <div className="v500-nav-links">
-        <a href="/help">{t('help')}</a>
-        <a href="/games">{t('games')}</a>
-        <a href="/leaderboard">{t('leaderboard')}</a>
-        <a href="/pricing">{t('pricing')}</a>
-        <a href="/login">{t('login')}</a>
+    <nav className="tulus-luxe-nav" aria-label="TULUS navigation">
+      <a className="tulus-luxe-brand" href="/" aria-label="TULUS home"><TulusLogo /></a>
+      <div className="tulus-luxe-nav-links">
+        {navItems.map(([label, href]) => <a key={href} href={href}>{t(label.toLowerCase()) || label}</a>)}
+      </div>
+      <div className="tulus-luxe-nav-actions">
         <LanguageSwitcher compact />
-        <a className="v500-nav-cta" href="/register">{t('create')}</a>
+        <a className="tulus-luxe-login" href="/login">{t('login')}</a>
+        <a className="tulus-luxe-create" href="/register">{t('create') || 'Create'}</a>
       </div>
     </nav>
   )
