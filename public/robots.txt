@@ -1,5 +1,10 @@
 User-agent: *
 Allow: /
-
+Disallow: /account
+Disallow: /account/
+Disallow: /customize
+Disallow: /links
+Disallow: /tulus-control
+Disallow: /auth
+Disallow: /onboarding
 Sitemap: https://tulus-id.vercel.app/sitemap.xml
-Host: https://tulus-id.vercel.app
