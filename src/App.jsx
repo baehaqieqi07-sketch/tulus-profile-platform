@@ -28,6 +28,7 @@ import { themeVars } from './lib/themes.js'
 import { validateUsername } from './lib/validation.js'
 import { supabase, supabaseReady } from './lib/supabase.js'
 import { ensureStarterProfile, loadPublicProfile, loadUserBundle, resolveRole, incrementProfileView } from './lib/profileStore.js'
+import { routeSeo } from './utils/seo.js'
 
 const STORAGE_KEY = 'tulus.local.v3'
 const BLOCKED_PUBLIC_PATHS = ['dashboard', 'tulus-control', 'login', 'register', 'auth', 'landing', 'enter', 'me', 'explore', 'onboarding', 'pricing', 'help', 'leaderboard', 'account', 'customize', 'links', 'premium', 'image-host', 'templates', 'games']
@@ -103,6 +104,10 @@ export default function App() {
   }, [user?.id])
 
   const usernamePath = decodeURIComponent(path.replace(/^\//, ''))
+
+  useEffect(() => {
+    routeSeo(path, publicBundle?.profile || profile)
+  }, [path, profile?.username, profile?.display_name, profile?.bio, publicBundle?.profile?.username])
 
   useEffect(() => {
     if (!supabaseReady || !isPublicUsernamePath(path)) return

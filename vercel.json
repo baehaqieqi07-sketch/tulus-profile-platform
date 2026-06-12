@@ -1,6 +1,18 @@
 {
   "rewrites": [
-    { "source": "/(.*)", "destination": "/index.html" }
+    { "source": "/account/:path*", "destination": "/index.html" },
+    { "source": "/customize", "destination": "/index.html" },
+    { "source": "/links", "destination": "/index.html" },
+    { "source": "/help", "destination": "/index.html" },
+    { "source": "/pricing", "destination": "/index.html" },
+    { "source": "/leaderboard", "destination": "/index.html" },
+    { "source": "/games", "destination": "/index.html" },
+    { "source": "/login", "destination": "/index.html" },
+    { "source": "/register", "destination": "/index.html" },
+    { "source": "/auth", "destination": "/index.html" },
+    { "source": "/onboarding", "destination": "/index.html" },
+    { "source": "/tulus-control", "destination": "/index.html" },
+    { "source": "/:username", "destination": "/index.html" }
   ],
   "headers": [
     {
@@ -9,8 +21,7 @@
         { "key": "X-Frame-Options", "value": "DENY" },
         { "key": "X-Content-Type-Options", "value": "nosniff" },
         { "key": "Referrer-Policy", "value": "strict-origin-when-cross-origin" },
-        { "key": "Permissions-Policy", "value": "camera=(), microphone=(), geolocation=()" },
-        { "key": "Cross-Origin-Opener-Policy", "value": "same-origin" }
+        { "key": "Permissions-Policy", "value": "camera=(), microphone=(), geolocation=()" }
       ]
     }
   ]

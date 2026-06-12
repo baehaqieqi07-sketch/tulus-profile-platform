@@ -1,0 +1,18 @@
+{
+  "name": "TULUS — A quiet profile space.",
+  "short_name": "TULUS",
+  "description": "Bio page dan profile space premium Indonesia dengan music, links, effects, games, dan Help Center AI.",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "background_color": "#071426",
+  "theme_color": "#071426",
+  "icons": [
+    {
+      "src": "/tulus-favicon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}
