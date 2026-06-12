@@ -150,7 +150,7 @@ export default function App() {
   if (path === '/account/badges') return nav(<AccountBadges user={user} profile={profile} />)
   if (path === '/account/analytics') return nav(<AccountAnalytics user={user} profile={profile} />)
   if (path === '/customize') return nav(<CustomizePage user={user} profile={profile} setProfile={setProfile} />)
-  if (path === '/links') return nav(<LinksPage user={user} profile={profile} />)
+  if (path === '/links') return nav(<LinksPage user={user} profile={profile} links={links} setLinks={setLinks} />)
   if (path === '/premium') return nav(<PremiumPage user={user} profile={profile} />)
   if (path === '/image-host') return nav(<PlaceholderDashboard user={user} profile={profile} title="Image Host" />)
   if (path === '/templates') return nav(<PlaceholderDashboard user={user} profile={profile} title="Templates" />)

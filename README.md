@@ -1,59 +1,39 @@
-# TULUS — A quiet profile space
+# TULUS
 
-TULUS adalah platform profile/bio page aesthetic dengan public profile `/:username`, click-to-enter, music, social/app links, dashboard edit profile, Help Center AI bekiw, Game Center, owner dashboard hidden, dan UI premium ORANG TULUS Blue Glass.
+TULUS adalah platform profile/bio page premium dengan konsep **A quiet profile space** dan tema ORANG TULUS Blue Glass.
 
-Style utama: soft blue glass, silver, lavender halus, glow biru lembut, clean, modern, responsive, tidak alay, dan tidak berantakan.
+## Isi utama
 
-## Route utama
+- React + Vite frontend
+- Supabase Auth, Database, Storage, dan Edge Functions scaffold
+- Public profile route `/:username`
+- Dashboard account, settings, badges, analytics
+- Customize profile dengan upload avatar/background/gallery/music
+- Links Studio dengan brand icons yang recognizable
+- Help Center premium dengan AI bekiw chat style
+- Language picker dengan localStorage dan fallback English
+- Game Center: Focus Tap, Memory Light, Aura Match, Word Flow
+- Leaderboard berbasis data profile/views, bukan angka random
+- Hidden owner panel `/tulus-control`
+- SEO dasar, robots.txt, sitemap.xml placeholder
 
-- `/`
-- `/login`
-- `/register`
-- `/auth`
-- `/onboarding`
-- `/pricing`
-- `/help`
-- `/leaderboard`
-- `/bekiw` atau `/:username`
-- `/account`
-- `/account/settings`
-- `/account/badges`
-- `/account/analytics`
-- `/customize`
-- `/links`
-- `/games`
-- `/tulus-control`
-- 404 aesthetic page not found
+## Build
 
-## Update penting di ZIP ini
+```bash
+npm install
+npm run build
+```
 
-- Brand icon system lebih rapi dan tidak pakai emoji random sebagai icon utama.
-- Support brand/app/payment icons: Discord, Instagram, Roblox, Spotify, Apple Music, YouTube, TikTok, X/Twitter, GitHub, Telegram, SoundCloud, Twitch, Steam, Pinterest, Website, Custom Link, Google, Email, WhatsApp, Facebook, Snapchat, Reddit, LinkedIn, PayPal, DANA, GoPay, OVO, ShopeePay, QRIS, Bank Transfer.
-- File baru: `src/lib/brandIcons.js`, `src/components/AppIcon.jsx`, `src/components/SocialIconButton.jsx`.
-- Language system ditambah Vietnamese dan alias `getText` / `setLanguage`.
-- Help Center AI bekiw tetap punya fallback lokal dan siap diarahkan ke server-side function.
-- Profile views sekarang memanggil Supabase RPC `increment_profile_view` jika profile punya ID.
-- Leaderboard memakai data public profile dari Supabase dan tidak menampilkan angka random.
-- Game Center punya best score dan daily streak di localStorage.
-
-## Cara install lokal Windows
-
-Buka PowerShell:
+Di Windows gunakan:
 
 ```powershell
-cd D:\tulus
 npm.cmd install
 npm.cmd run build
-npm.cmd run dev
 ```
 
-Local URL biasanya:
+Warning chunk besar dari Vite bukan error selama build selesai dengan `✓ built`.
 
-```text
-http://localhost:5173
-```
-
-## Environment Vercel wajib
+## Env Vercel wajib
 
 ```env
 VITE_SUPABASE_URL=
@@ -63,42 +43,25 @@ VITE_OWNER_EMAIL=baehaqieqi07@gmail.com
 APP_URL=https://tulus-id.vercel.app
 ```
 
-Opsional untuk AI bekiw real:
+Jangan taruh secret di frontend atau GitHub.
 
-```env
-VITE_BEKIW_AI_ENDPOINT=
-```
+## Secret server-side
 
-## Secret jangan masuk frontend/GitHub
+Secret seperti `OPENAI_API_KEY`, `SUPABASE_SERVICE_ROLE_KEY`, `TURNSTILE_SECRET_KEY`, payment gateway secret, dan Cloudflare token harus disimpan server-side, bukan di file frontend.
 
-Jangan taruh value asli untuk secret ini di frontend atau file yang dipush:
+## Supabase SQL urutan aman
 
-```env
-SUPABASE_SERVICE_ROLE_KEY=
-TURNSTILE_SECRET_KEY=
-OPENAI_API_KEY=
-PAYMENT_SECRET_KEY=
-PAYMENT_WEBHOOK_SECRET=
-CLOUDFLARE_API_TOKEN=
-```
+Jalankan file ini satu per satu di Supabase SQL Editor:
 
-## Supabase SQL yang aman
+1. `supabase/sql/00_FULL_SAFE_MIGRATION.sql`
+2. `supabase/sql/rls-policies.sql`
+3. `supabase/sql/storage-policies.sql`
+4. `supabase/sql/music-recommendations.sql`
+5. `supabase/sql/01_OWNER_BEKIW_SETUP.sql`
 
-Kalau database sudah pernah dibuat, jangan jalankan `schema.sql`.
+Jangan jalankan `schema.sql` pada database yang sudah dibuat jika type `profile_visibility` sudah ada.
 
-Jalankan urut di Supabase SQL Editor:
-
-```text
-supabase/sql/00_FULL_SAFE_MIGRATION.sql
-supabase/sql/rls-policies.sql
-supabase/sql/storage-policies.sql
-supabase/sql/music-recommendations.sql
-supabase/sql/01_OWNER_BEKIW_SETUP.sql
-```
-
-Kalau muncul error `profile_visibility already exists`, artinya yang dijalankan file schema mentah. Solusi: pakai `00_FULL_SAFE_MIGRATION.sql`.
-
-## Bucket Supabase Storage
+## Storage buckets
 
 - `avatars` public
 - `backgrounds` public
@@ -106,41 +69,21 @@ Kalau muncul error `profile_visibility already exists`, artinya yang dijalankan 
 - `profile-music` public
 - `payment-proofs` private
 
-## Login provider
+## AI bekiw
 
-Google dan Discord button sudah disiapkan di UI. Untuk login real, aktifkan provider di:
-
-**Supabase → Authentication → Providers**
-
-Lalu isi Client ID dan Client Secret asli dari Google/Discord developer dashboard.
-
-## AI bekiw real
-
-UI Help Center sudah siap. Fallback lokal tetap jalan tanpa API key.
-
-Untuk AI real, deploy Supabase Edge Function `bekiw-help-ai`, isi server env:
+UI dan fallback AI sudah siap. Real AI memakai Supabase Edge Function `bekiw-help-ai` dan butuh secret:
 
 ```env
 OPENAI_API_KEY=
-OPENAI_MODEL=gpt-5.5
+OPENAI_MODEL=
 ```
 
-Jangan pernah taruh `OPENAI_API_KEY` di frontend.
+Kalau key belum ada, Help Center tetap jalan dengan fallback knowledge lokal.
 
-## Payment / premium
+## Payment/Premium
 
-UI Free, Plus, Pro, Lifetime dan scaffold pembayaran sudah disiapkan. Payment otomatis belum aktif sampai payment gateway key dan webhook asli dipasang.
+UI plan Free, Plus, Pro, Lifetime, billing page, manual proof, checkout placeholder, dan webhook scaffold tersedia. Payment otomatis belum boleh diklaim aktif sampai provider key dan webhook real diisi.
 
-Provider yang bisa disiapkan nanti: Midtrans, Xendit, Duitku, Stripe, atau manual payment proof.
+## Deploy
 
-## Build test status
-
-Build terakhir sukses:
-
-```text
-npm install
-npm run build
-✓ built
-```
-
-Warning chunk lebih dari 500kB adalah warning performa, bukan error.
+Push ke GitHub repo, lalu Vercel project `tulus` akan deploy. Setelah env diubah, lakukan redeploy tanpa existing build cache.

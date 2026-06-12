@@ -92,6 +92,13 @@ export const THEMES = {
   'Midnight Glass': { name: 'Midnight Glass', free: false, background: 'linear-gradient(135deg, #10131c, #1f2633, #151720)', accent: '#b6d9ff', text: '#f7fbff', muted: '#ccd8e3', card: 'rgba(255,255,255,.12)', glow: 'rgba(182,217,255,.28)' }
 }
 
+
+THEMES['ORANG TULUS Blue Glass'] = THEMES['Orang Tulus Blue Glass']
+THEMES['Black Pearl'] = THEMES['TULUS Bio Night']
+THEMES['Soft Lavender'] = THEMES['Lavender Mist']
+THEMES['Silver Calm'] = THEMES['Silver Silk']
+THEMES['Midnight Cyan'] = THEMES['Midnight Glass']
+
 export const DEFAULT_THEME = THEMES['TULUS Bio Night'] || THEMES['Orang Tulus Blue Glass']
 
 export function themeVars(themeName = 'TULUS Bio Night') {

@@ -1,64 +1,102 @@
-import { useMemo, useRef, useState } from 'react'
+import { useEffect, useMemo, useRef, useState } from 'react'
 import TulusLogo from './TulusLogo.jsx'
+import PremiumButton from './PremiumButton.jsx'
 import { TULUS_KNOWLEDGE, answerFromKnowledge } from '../lib/bekiwKnowledge.js'
 import { useTulusLanguage } from '../lib/i18n.js'
+import { supabase, supabaseReady } from '../lib/supabase.js'
+
+const HISTORY_KEY = 'tulus.bekiw.chat.v3'
 
 const starterByLang = {
-  id: ['Bantu aku rapihin profile', 'Cara ganti bahasa?', 'Cara bikin musik bunyi?', 'Kenapa owner panel 404?', 'Game Center itu apa?'],
-  en: ['Help me improve my profile', 'How do I change language?', 'How do I make music play?', 'Why is owner panel 404?', 'What is Game Center?'],
-  su: ['Bantos rapihkeun profile', 'Kumaha ganti basa?', 'Kumaha musik jalan?', 'Naha owner panel 404?', 'Game Center naon?'],
-  vi: ['Giúp tôi làm hồ sơ đẹp hơn', 'Cách đổi ngôn ngữ?', 'Cách bật nhạc?', 'Vì sao owner panel 404?', 'Game Center là gì?']
+  id: ['Cara ubah background?', 'Cara tambah link Discord?', 'Kenapa YouTube tidak autoplay?', 'Cara pakai MP3?', 'Cara ganti bahasa?'],
+  en: ['How do I change background?', 'How do I add Discord?', 'Why does YouTube not autoplay?', 'How do I use MP3?', 'How do I change language?'],
+  ja: ['背景を変えるには？', 'Discordリンクを追加するには？', 'YouTubeが自動再生しない理由は？'],
+  ko: ['배경은 어떻게 바꾸나요?', 'Discord 링크는 어떻게 추가하나요?', 'YouTube가 자동 재생되지 않는 이유는?'],
+  ar: ['كيف أغير الخلفية؟', 'كيف أضيف رابط Discord؟', 'لماذا لا يعمل YouTube تلقائياً؟'],
+  vi: ['Cách đổi background?', 'Cách thêm link Discord?', 'Vì sao YouTube không tự phát?']
 }
 
 function detectLanguage(text = '', fallback = 'id') {
-  if (/^[\s\S]*[ぁ-んァ-ン一-龯]/.test(text)) return 'ja'
-  if (/^[\s\S]*[가-힣]/.test(text)) return 'ko'
-  if (/^[\s\S]*[ء-ي]/.test(text)) return 'ar'
-  if (/kumaha|abdi|saha|naha|basa|sunda/i.test(text)) return 'su'
+  if (/[ぁ-んァ-ン一-龯]/.test(text)) return 'ja'
+  if (/[가-힣]/.test(text)) return 'ko'
+  if (/[ء-ي]/.test(text)) return 'ar'
   if (/cách|ngôn ngữ|hồ sơ|nhạc|đăng nhập|trợ giúp/i.test(text)) return 'vi'
+  if (/como|por qué|ayuda|perfil|música/i.test(text)) return 'es'
+  if (/comment|aide|profil|musique/i.test(text)) return 'fr'
+  if (/wie|hilfe|profil|musik/i.test(text)) return 'de'
   if (/how|why|what|where|can|help|profile|music|upload|language/i.test(text)) return 'en'
   return fallback || 'id'
 }
 
 function intro(lang) {
-  if (lang === 'en') return 'Hi, I’m bekiw. I understand TULUS: profile, dashboard, links, music, upload, language, games, analytics, premium, owner panel, and security. Ask me like a normal chat.'
-  if (lang === 'su') return 'Halo, abdi bekiw. Abdi ngartos TULUS: profile, dashboard, link, musik, upload, basa, game, analytics, premium, owner panel, jeung security.'
-  if (lang === 'vi') return 'Xin chào, mình là bekiw. Mình hiểu TULUS: hồ sơ, dashboard, liên kết, nhạc, upload, ngôn ngữ, game, analytics, premium, owner panel và bảo mật.'
-  return 'Halo, aku bekiw. Aku paham TULUS: profile, dashboard, link, musik, upload, bahasa, game, analytics, premium, owner panel, dan security. Tanya aja kayak chat biasa.'
+  if (lang === 'en') return 'Hi, I’m bekiw. I can help with TULUS: profile, dashboard, links, music, uploads, language, games, analytics, premium, security, and setup. Ask me like a normal chat.'
+  if (lang === 'ja') return 'こんにちは、bekiwです。TULUS のプロフィール、音楽、リンク、アップロード、言語、ゲーム、セキュリティを手伝えます。'
+  if (lang === 'ko') return '안녕, 나는 bekiw야. TULUS의 프로필, 음악, 링크, 업로드, 언어, 게임, 보안 설정을 도와줄게.'
+  if (lang === 'ar') return 'مرحباً، أنا bekiw. أساعدك في TULUS: الملف الشخصي، الموسيقى، الروابط، الرفع، اللغة، الألعاب، والأمان.'
+  if (lang === 'vi') return 'Xin chào, mình là bekiw. Mình hỗ trợ TULUS: hồ sơ, link, nhạc, upload, ngôn ngữ, game, analytics, premium và bảo mật.'
+  return 'Halo, aku bekiw. Aku bisa bantu TULUS: profile, dashboard, link, musik, upload, bahasa, game, analytics, premium, security, sampai setup. Tanya aja kayak chat biasa.'
 }
 
 function polish(text, question, lang) {
   const qLang = detectLanguage(question, lang)
-  if (qLang === 'en') return `${text}\n\nDo this one step at a time: open the section, change one thing, save, then check your public profile. No need to touch other settings first.`
-  if (qLang === 'su') return `${text}\n\nLakukeun hiji-hiji: buka bagianna, robah hiji heula, simpen, terus cek profile publik.`
-  if (qLang === 'ja') return `${text}\n\n一つずつ進めてください。該当セクションを開いて、1つ変更し、保存してから公開プロフィールを確認します。`
-  if (qLang === 'ko') return `${text}\n\n한 번에 하나씩 하세요. 해당 메뉴를 열고 하나만 바꾼 뒤 저장하고 공개 프로필을 확인하세요.`
-  if (qLang === 'ar') return `${text}\n\nافعلها خطوة بخطوة: افتح القسم، غيّر شيئًا واحدًا، احفظ، ثم افحص الملف العام.`
-  if (qLang === 'vi') return `${text}\n\nLàm từng bước: mở đúng mục, đổi một phần, bấm save, rồi kiểm tra public profile.`
-  return `${text}\n\nBiar gampang: buka menu yang disebut, ubah satu bagian dulu, klik save, lalu cek profile publik. Jangan ubah semuanya sekaligus.`
+  if (qLang === 'en') return `${text}\n\nDo it step by step: open the right page, change one thing, save, then check your public profile.`
+  if (qLang === 'ja') return `${text}\n\n一つずつ進めてください。該当ページを開いて、1つ変更し、保存してから公開プロフィールを確認します。`
+  if (qLang === 'ko') return `${text}\n\n한 번에 하나씩 하세요. 해당 페이지를 열고 하나만 바꾼 뒤 저장하고 공개 프로필을 확인하세요.`
+  if (qLang === 'ar') return `${text}\n\nافعلها خطوة بخطوة: افتح الصفحة المناسبة، غيّر شيئًا واحدًا، احفظ، ثم افحص الملف العام.`
+  if (qLang === 'vi') return `${text}\n\nLàm từng bước: mở đúng trang, đổi một phần, bấm save, rồi kiểm tra public profile.`
+  return `${text}\n\nBiar gampang: buka halaman yang disebut, ubah satu bagian dulu, klik save, lalu cek profile publik.`
+}
+
+function readHistory(lang) {
+  try {
+    const saved = JSON.parse(localStorage.getItem(HISTORY_KEY) || '[]')
+    return Array.isArray(saved) && saved.length ? saved.slice(-20) : [{ role: 'assistant', text: intro(lang), time: 'now', liked: null }]
+  } catch {
+    return [{ role: 'assistant', text: intro(lang), time: 'now', liked: null }]
+  }
 }
 
 export default function BekiwAIChat({ compact = false }) {
   const { lang, t } = useTulusLanguage()
-  const [messages, setMessages] = useState([{ role: 'assistant', text: intro(lang), time: 'now' }])
+  const [messages, setMessages] = useState(() => readHistory(lang))
   const [input, setInput] = useState('')
   const [loading, setLoading] = useState(false)
   const [typingText, setTypingText] = useState('')
   const boxRef = useRef(null)
-  const endpoint = import.meta.env.VITE_BEKIW_AI_ENDPOINT
   const context = useMemo(() => TULUS_KNOWLEDGE.map((x) => `${x.title}: ${x.body}`).join('\n'), [])
   const starter = starterByLang[lang] || starterByLang.id
+
+  useEffect(() => {
+    localStorage.setItem(HISTORY_KEY, JSON.stringify(messages.slice(-20)))
+    requestAnimationFrame(() => boxRef.current?.scrollTo({ top: boxRef.current.scrollHeight, behavior: 'smooth' }))
+  }, [messages, typingText])
 
   async function typeAnswer(answer) {
     setTypingText('')
     const chunks = answer.split(/(\s+)/)
     for (let i = 0; i < chunks.length; i++) {
-      await new Promise((r) => setTimeout(r, compact ? 7 : 13))
+      await new Promise((r) => setTimeout(r, compact ? 5 : 10))
       setTypingText((prev) => `${prev}${chunks[i]}`)
     }
-    setMessages((prev) => [...prev, { role: 'assistant', text: answer, time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) }])
+    setMessages((prev) => [...prev, { role: 'assistant', text: answer, time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }), liked: null }])
     setTypingText('')
-    requestAnimationFrame(() => boxRef.current?.scrollTo({ top: boxRef.current.scrollHeight, behavior: 'smooth' }))
+  }
+
+  async function getServerAnswer(clean) {
+    const payload = { message: clean, context, language: detectLanguage(clean, lang), tone: 'friendly-human-help-center', name: 'bekiw' }
+    if (supabaseReady && supabase?.functions) {
+      const { data, error } = await supabase.functions.invoke('bekiw-help-ai', { body: payload })
+      if (!error && data?.answer) return data.answer
+    }
+    const endpoint = import.meta.env.VITE_BEKIW_AI_ENDPOINT
+    if (endpoint) {
+      const res = await fetch(endpoint, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload) })
+      if (res.ok) {
+        const data = await res.json()
+        return data.answer || data.output_text || ''
+      }
+    }
+    return ''
   }
 
   async function send(text = input) {
@@ -68,15 +106,8 @@ export default function BekiwAIChat({ compact = false }) {
     setMessages((prev) => [...prev, { role: 'user', text: clean, time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) }])
     setLoading(true)
     try {
-      let answer = ''
-      if (endpoint) {
-        const res = await fetch(endpoint, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ message: clean, context, language: detectLanguage(clean, lang), tone: 'friendly-human-help-center', name: 'bekiw' }) })
-        if (res.ok) {
-          const data = await res.json()
-          answer = data.answer || data.output_text || ''
-        }
-      }
-      if (!answer) answer = polish(answerFromKnowledge(clean), clean, lang)
+      const server = await getServerAnswer(clean)
+      const answer = server || polish(answerFromKnowledge(clean), clean, lang)
       await typeAnswer(answer)
     } catch {
       await typeAnswer(polish(answerFromKnowledge(clean), clean, lang))
@@ -85,25 +116,42 @@ export default function BekiwAIChat({ compact = false }) {
     }
   }
 
+  function clearChat() {
+    const first = [{ role: 'assistant', text: intro(lang), time: 'now', liked: null }]
+    setMessages(first)
+    localStorage.setItem(HISTORY_KEY, JSON.stringify(first))
+  }
+
+  function rate(index, liked) {
+    setMessages((prev) => prev.map((msg, i) => i === index ? { ...msg, liked } : msg))
+  }
+
   return (
-    <section className={`bekiw-ai v500-ai million-ai ${compact ? 'compact' : ''}`}>
+    <section className={`bekiw-ai v500-ai million-ai luxury-ai ${compact ? 'compact' : ''}`}>
       <div className="bekiw-ai-head">
         <div className="bekiw-avatar"><TulusLogo compact /></div>
-        <div><b>bekiw</b><span>{t('aiTitle')} • TULUS specialist</span></div>
-        <i>{loading ? 'typing…' : 'online'}</i>
-        <button type="button" className="bekiw-clear" onClick={() => setMessages([{ role: 'assistant', text: intro(lang), time: 'now' }])}>clear</button>
+        <div><b>bekiw</b><span>{t('statusOnline')} • TULUS specialist</span></div>
+        <i>{loading ? t('thinking') : t('statusOnline')}</i>
+        <button type="button" className="bekiw-clear" onClick={clearChat}>{t('clear')}</button>
       </div>
       <div className="bekiw-ai-messages" ref={boxRef}>
-        {messages.map((m, i) => <p key={i} className={m.role}><span>{m.text}</span><small>{m.time}</small></p>)}
+        {messages.map((m, i) => (
+          <p key={i} className={m.role}>
+            <span>{m.text}</span>
+            <small>{m.time}</small>
+            {m.role === 'assistant' && !compact ? <em className="bekiw-actions"><button onClick={() => navigator.clipboard?.writeText(m.text)}>{t('copy')}</button><button onClick={() => rate(i, true)}>{m.liked === true ? 'liked' : 'like'}</button><button onClick={() => rate(i, false)}>{m.liked === false ? 'reported' : 'report'}</button></em> : null}
+          </p>
+        ))}
         {loading && !typingText && <p className="assistant typing"><span><i/><i/><i/></span></p>}
         {typingText && <p className="assistant"><span>{typingText}</span><small>typing</small></p>}
       </div>
       <div className="bekiw-ai-chips">
         {starter.slice(0, compact ? 3 : 5).map((x) => <button key={x} type="button" onClick={() => send(x)}>{x}</button>)}
       </div>
+      {!compact && <div className="bekiw-ai-chips secondary"><button type="button">Attach screenshot placeholder</button><button type="button">Suggested action</button><button type="button">Helpful?</button></div>}
       <form className="bekiw-ai-input" onSubmit={(e) => { e.preventDefault(); send() }}>
-        <input value={input} onChange={(e) => setInput(e.target.value)} placeholder={lang === 'en' ? 'Message bekiw…' : lang === 'su' ? 'Kirim pesen ka bekiw…' : lang === 'vi' ? 'Nhắn cho bekiw…' : 'Chat bekiw seperti chat biasa…'} />
-        <button type="submit">{t('send')}</button>
+        <textarea value={input} onChange={(e) => setInput(e.target.value)} placeholder={t('messageBekiw')} rows={1} onKeyDown={(e) => { if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); send() } }} />
+        <PremiumButton type="submit">{t('send')}</PremiumButton>
       </form>
     </section>
   )
