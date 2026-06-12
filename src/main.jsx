@@ -5,6 +5,7 @@ import './styles/tokens.css'
 import './styles/animations.css'
 import './styles/effects.css'
 import './styles.css'
+import './styles/final-polish.css'
 
 createRoot(document.getElementById('root')).render(
   <React.StrictMode>
