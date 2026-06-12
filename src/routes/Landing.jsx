@@ -1,99 +1,188 @@
-import CleanNav from '../components/CleanNav.jsx'
 import TulusLogo from '../components/TulusLogo.jsx'
 import BrandIcon from '../components/BrandIcon.jsx'
 
-const apps = ['discord','instagram','roblox','spotify','apple music','youtube','tiktok','github','telegram','soundcloud']
-const features = [
-  ['Fullscreen profile', 'Click-to-enter, avatar glow, badges, music, links, gallery, dan view counter dalam satu profile yang fokus.'],
-  ['App links that feel real', 'Logo Discord, Instagram, Roblox, Spotify, Apple Music, YouTube, TikTok, Website, dan brand lain tampil konsisten.'],
-  ['Music mood system', 'Direct audio bisa play setelah enter. Platform eksternal jadi tombol open yang aman dan jelas.'],
-  ['Creator dashboard', 'Edit profile, link, background, music, effects, analytics, premium, dan help center dalam flow yang rapi.'],
-  ['Game lounge', 'Mini game ringan tapi playable: Focus Rush, Memory Pulse, Aura Clash, dan Word Flow.'],
-  ['Premium safety', 'Owner route hidden, env aman, storage policy siap, dan tidak ada secret di frontend.']
+const navItems = [
+  ['Help Center', '/help'],
+  ['Explore', '/explore'],
+  ['Leaderboard', '/leaderboard'],
+  ['Pricing', '/pricing'],
 ]
-const flow = ['Register', 'Pick username', 'Upload avatar/background', 'Add links & music', 'Publish profile', 'Share /bekiw']
 
-function HeroProfile() {
+const appIcons = ['discord', 'instagram', 'roblox', 'spotify', 'apple music', 'youtube', 'tiktok']
+
+const steps = [
+  ['01', 'Create account', 'Daftar, pilih username, lalu buka dashboard.'],
+  ['02', 'Customize profile', 'Atur background, avatar, bio, warna, efek, dan layout.'],
+  ['03', 'Add links & music', 'Masukkan app links dan audio direct untuk profile.'],
+  ['04', 'Publish', 'Bagikan link profile TULUS kamu ke siapa pun.'],
+]
+
+const featureCards = [
+  ['Public profile', 'Halaman /username fullscreen dengan background, music, views, badges, dan icon app.'],
+  ['Customize studio', 'Editor profile dibuat jelas: asset, identity, colors, effects, privacy, dan preview.'],
+  ['Help Center', 'Bantuan TULUS dibuat ringkas, mudah dicari, dan tidak bertele-tele.'],
+  ['Game Center', 'Mini game ringan untuk profile mood, score, streak, dan achievement lokal.'],
+]
+
+const faqs = [
+  ['TULUS itu apa?', 'TULUS adalah platform profile/bio page untuk menaruh identitas, link aplikasi, musik, background, dan halaman publik dalam satu tempat.'],
+  ['Apakah bisa pakai music?', 'Bisa. Audio direct seperti MP3, WAV, OGG, dan M4A bisa diputar setelah visitor klik enter. Link YouTube atau Spotify dibuka sebagai external button.'],
+  ['Apakah dashboard bisa edit profile?', 'Bisa. Dashboard dipakai untuk edit nama, bio, avatar, background, link, musik, efek, privacy, dan preview profile.'],
+  ['Apakah premium sudah otomatis?', 'Payment gateway real tetap butuh provider dan secret server-side. UI premium dan manual verification disiapkan dengan aman.'],
+]
+
+function HomeNav() {
   return (
-    <aside className="pro-hero-device" aria-label="TULUS profile preview">
-      <div className="pro-device-screen">
-        <div className="pro-device-top"><span /> <i>TULUS</i> <span /></div>
-        <div className="pro-device-avatar"><TulusLogo compact /></div>
-        <small>@bekiw</small>
-        <h2>bekiw</h2>
-        <p>A quiet profile space.</p>
-        <div className="pro-device-icons">{apps.slice(0,7).map((app)=><b key={app}><BrandIcon name={app} size={22}/></b>)}</div>
-        <button>click to enter</button>
-        <div className="pro-device-player"><span /> <div><b>Blue Glass</b><small>soft audio mood</small></div><i>▮▮</i></div>
+    <nav className="home-topbar" aria-label="TULUS navigation">
+      <a className="home-brand" href="/" aria-label="TULUS Home"><TulusLogo /></a>
+      <div className="home-navlinks">
+        {navItems.map(([label, href]) => <a key={href} href={href}>{label}</a>)}
       </div>
-    </aside>
+      <a className="home-dash-btn" href="/account">Dashboard</a>
+    </nav>
+  )
+}
+
+function DashboardMockup() {
+  return (
+    <div className="home-mockup-wrap" aria-label="TULUS dashboard and profile preview">
+      <section className="home-dashboard-card">
+        <aside>
+          <TulusLogo compact />
+          <span className="active">Account</span>
+          <span>Customize</span>
+          <span>Links</span>
+          <span>Music</span>
+          <span>Analytics</span>
+        </aside>
+        <main>
+          <div className="home-mini-stats">
+            <b>Username</b><b>Links</b><b>Music</b><b>Views</b>
+          </div>
+          <div className="home-graph" />
+          <div className="home-row"><span /> <i /></div>
+          <div className="home-row short"><span /> <i /></div>
+        </main>
+      </section>
+      <section className="home-profile-stack one">
+        <div className="home-profile-bg" />
+        <h3>Azre</h3>
+        <small>@profile</small>
+        <div><BrandIcon name="discord" size={18}/><BrandIcon name="spotify" size={18}/><BrandIcon name="youtube" size={18}/></div>
+      </section>
+      <section className="home-profile-stack two">
+        <div className="home-profile-bg alt" />
+        <h3>bekiw</h3>
+        <small>A quiet profile space.</small>
+        <div>{appIcons.slice(0,4).map((app) => <BrandIcon key={app} name={app} size={18}/>)}</div>
+      </section>
+    </div>
   )
 }
 
 export default function Landing() {
   return (
-    <main className="pro-page pro-landing">
-      <CleanNav />
-      <section className="pro-hero">
-        <div className="pro-hero-copy">
-          <p className="pro-kicker">ORANG TULUS BLUE GLASS</p>
-          <h1>Profile space yang terasa mahal, hidup, dan jelas.</h1>
-          <p className="pro-sub">TULUS adalah bio/profile platform modern untuk public profile fullscreen, music, app links, background aesthetic, effects, dashboard, games, dan AI help. Dibuat original dengan vibe web besar: clean, smooth, dan tidak random.</p>
-          <div className="pro-actions">
-            <a className="pro-btn primary" href="/register">Create Profile</a>
-            <a className="pro-btn secondary" href="/bekiw">View /bekiw</a>
-            <a className="pro-btn ghost" href="/explore">Explore</a>
-          </div>
-          <div className="pro-proof-row">
-            <span><b>Profile</b><small>fullscreen bio</small></span>
-            <span><b>Music</b><small>direct audio ready</small></span>
-            <span><b>Dashboard</b><small>creator workspace</small></span>
+    <main className="home-page-clean">
+      <HomeNav />
+
+      <section className="home-hero-clean">
+        <div className="home-hero-copy-clean">
+          <p className="home-kicker">TULUS PROFILE PLATFORM</p>
+          <h1>Semua link, musik, dan profile kamu dalam satu halaman.</h1>
+          <p>
+            Buat profile publik yang rapi, fullscreen, dan mudah dibagikan. TULUS fokus ke tampilan clean, dashboard jelas, dan pengalaman profile yang nyaman di semua device.
+          </p>
+          <div className="home-actions-clean">
+            <a href="/register">Create profile</a>
+            <a href="/pricing">View pricing</a>
           </div>
         </div>
-        <HeroProfile />
+        <DashboardMockup />
       </section>
 
-      <section className="pro-logo-strip">
-        {apps.map((app)=><article key={app}><BrandIcon name={app} size={24}/><span>{app}</span></article>)}
+      <section className="home-metrics-clean" aria-label="TULUS features">
+        <article><strong>Profile</strong><span>Fullscreen bio page</span></article>
+        <article><strong>Music</strong><span>Direct audio ready</span></article>
+        <article><strong>Links</strong><span>Brand icons</span></article>
+        <article><strong>Dashboard</strong><span>Clean editor flow</span></article>
       </section>
 
-      <section className="pro-section pro-split">
+      <section className="home-claim-clean">
+        <h2>Claim username kamu dan mulai dari dashboard.</h2>
+        <form onSubmit={(event) => event.preventDefault()}>
+          <span>tulus-id.vercel.app/</span>
+          <input aria-label="username" placeholder="username" />
+          <a href="/register">Claim</a>
+        </form>
+      </section>
+
+      <section className="home-steps-clean">
+        <div className="home-section-title">
+          <p className="home-kicker">CLEAR FLOW</p>
+          <h2>Alur dibuat singkat, jelas, dan tidak membingungkan.</h2>
+        </div>
+        <div className="home-step-grid">
+          {steps.map(([num, title, body]) => (
+            <article key={title}>
+              <b>{num}</b>
+              <h3>{title}</h3>
+              <p>{body}</p>
+            </article>
+          ))}
+        </div>
+      </section>
+
+      <section className="home-feature-clean">
+        <div className="home-section-title center">
+          <p className="home-kicker">PLATFORM</p>
+          <h2>Bagian utama TULUS dibuat satu gaya.</h2>
+        </div>
+        <div className="home-feature-grid-clean">
+          {featureCards.map(([title, body]) => (
+            <article key={title}>
+              <h3>{title}</h3>
+              <p>{body}</p>
+            </article>
+          ))}
+        </div>
+      </section>
+
+      <section className="home-faq-clean">
+        <h2>Frequently Asked Questions</h2>
         <div>
-          <p className="pro-kicker">Platform flow</p>
-          <h2>Alurnya dibuat jelas dari awal sampai publish.</h2>
-          <p>Visitor melihat profile yang fokus. Creator mengatur semuanya dari dashboard. Owner panel tetap hidden dan aman.</p>
-        </div>
-        <div className="pro-flow">
-          {flow.map((item,i)=><span key={item}><b>{String(i+1).padStart(2,'0')}</b>{item}</span>)}
-        </div>
-      </section>
-
-      <section className="pro-section">
-        <div className="pro-section-head">
-          <p className="pro-kicker">Why TULUS</p>
-          <h2>Semua halaman harus terasa satu brand, bukan tempelan.</h2>
-        </div>
-        <div className="pro-feature-grid">
-          {features.map(([title,body])=><article className="pro-card" key={title}><h3>{title}</h3><p>{body}</p></article>)}
+          {faqs.map(([question, answer]) => (
+            <details key={question}>
+              <summary>{question}</summary>
+              <p>{answer}</p>
+            </details>
+          ))}
         </div>
       </section>
 
-      <section className="pro-section pro-showcase">
+      <section className="home-final-cta-clean">
         <div>
-          <p className="pro-kicker">Ready for public</p>
-          <h2>Landing, dashboard, profile, help, pricing, dan games punya style yang sama.</h2>
+          <h2>Siapkan profile TULUS kamu.</h2>
+          <p>Mulai dari profile basic, lalu tambah link, background, musik, dan badge sesuai kebutuhan.</p>
         </div>
-        <div className="pro-showcase-grid">
-          <a href="/customize">Customize Studio</a>
-          <a href="/links">Links Studio</a>
+        <form onSubmit={(event) => event.preventDefault()}>
+          <span>tulus-id.vercel.app/</span>
+          <input aria-label="claim username" placeholder="username" />
+          <a href="/register">Claim</a>
+        </form>
+      </section>
+
+      <footer className="home-footer-clean">
+        <div>
+          <TulusLogo />
+          <p>A quiet profile space.</p>
+        </div>
+        <nav>
+          <a href="/login">Login</a>
+          <a href="/register">Sign up</a>
+          <a href="/pricing">Pricing</a>
           <a href="/help">Help Center</a>
-          <a href="/games">Game Lounge</a>
-        </div>
-      </section>
-
-      <footer className="pro-footer">
-        <TulusLogo />
-        <nav><a href="/pricing">Pricing</a><a href="/help">Help</a><a href="/games">Games</a><a href="/login">Login</a></nav>
+          <a href="/games">Games</a>
+        </nav>
       </footer>
     </main>
   )

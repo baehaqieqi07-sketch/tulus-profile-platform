@@ -10,6 +10,7 @@ import './styles/luxury-rebuild.css'
 import './styles/emergency-luxury-redesign.css'
 import './styles/tulus-clean-rebuild.css'
 import './styles/tulus-major-platform.css'
+import './styles/tulus-home-landing-final.css'
 
 createRoot(document.getElementById('root')).render(
   <React.StrictMode>
