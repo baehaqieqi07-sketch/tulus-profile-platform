@@ -1,15 +1,4 @@
-import { useMemo, useState } from 'react'
-import ProfileCard from '../components/ProfileCard.jsx'
-
-export default function Explore({ profile, links, badges }) {
-  const [query, setQuery] = useState('')
-  const profiles = useMemo(() => [profile].filter((p) => p.visibility === 'public' && !p.is_hidden_from_explore && !p.is_suspended), [profile])
-  const filtered = profiles.filter((p) => p.username.includes(query.toLowerCase()) || p.display_name.toLowerCase().includes(query.toLowerCase()))
-  return (
-    <main className="explore-page">
-      <nav className="site-nav glass-card"><a className="brand" href="/">TULUS</a><div><a href="/login">Login</a><a className="nav-button" href="/register">Create Profile</a></div></nav>
-      <section className="page-head"><p className="eyebrow">explore</p><h1>Quiet public profiles.</h1><p className="muted">Only public and safe profiles appear here.</p><input className="search-input" placeholder="Search username" value={query} onChange={(e) => setQuery(e.target.value)} /></section>
-      <section className="explore-grid">{filtered.map((item) => <a key={item.username} href={`/${item.username}`} className="explore-card"><ProfileCard profile={item} links={links} badges={badges} entered /></a>)}</section>
-    </main>
-  )
-}
+import CleanNav from '../components/CleanNav.jsx'
+import SocialIconButton from '../components/SocialIconButton.jsx'
+const profiles = ['bekiw','aulia','qiel']
+export default function Explore({ profile, links = [] }) { return <main className="pro-page pro-explore"><CleanNav/><section className="pro-pricing-hero"><p className="pro-kicker">Explore</p><h1>Temukan profile TULUS yang public.</h1><p>Explore menampilkan profile public yang aman dan tidak hidden. Data bisa dikembangkan dari Supabase.</p></section><section className="pro-profile-grid">{profiles.map((u,i)=><a className="pro-card pro-explore-card" key={u} href={`/${u}`}><div className="pro-mini-avatar">{u[0].toUpperCase()}</div><h2>@{u}</h2><p>{i===0 ? (profile?.bio || 'A quiet profile space.') : 'Blue glass profile preview.'}</p><div className="pro-profile-links mini">{(links.length?links.slice(0,4):['discord','instagram','spotify','youtube'].map(x=>({label:x,icon:x,url:'https://tulus-id.vercel.app'}))).map((l,idx)=><SocialIconButton key={idx} link={l}/>)}</div></a>)}</section></main> }

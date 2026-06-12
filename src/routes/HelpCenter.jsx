@@ -1,48 +1,29 @@
 import { useMemo, useState } from 'react'
+import CleanNav from '../components/CleanNav.jsx'
 import BekiwAIChat from '../components/BekiwAIChat.jsx'
-import TulusNav from '../components/TulusNav.jsx'
-import PremiumButton from '../components/PremiumButton.jsx'
-import EmptyState from '../components/EmptyState.jsx'
-import { V7GlowBackground } from '../components/V7Shell.jsx'
-import { useTulusLanguage } from '../lib/i18n.js'
 
 const categories = [
-  ['Getting Started', 'Register, login, onboarding, publish profile.'],
-  ['Profile', 'Avatar, background, bio, layouts, badges, quotes.'],
-  ['Music', 'MP3 direct audio, external music buttons, volume, loop.'],
-  ['Links & Apps', 'Discord, Instagram, Roblox, Spotify, YouTube, custom links.'],
-  ['Premium', 'Plans, proof upload, manual verification by owner.'],
-  ['Troubleshooting', 'Blank page, login redirect, upload failed, Supabase RLS.']
+  ['Getting Started','Buat akun, login, onboarding, dan publish profile pertama.','01'],
+  ['Profile','Edit nama, bio, avatar, background, badges, quotes, layout.','02'],
+  ['Music','Direct audio bisa play setelah enter; platform luar jadi external.','03'],
+  ['Links & Apps','Discord, Instagram, Roblox, Spotify, YouTube, TikTok, Website.','04'],
+  ['Upload','Avatar, background, gallery, dan music memakai file picker.','05'],
+  ['Privacy','Public, unlisted, private, views, dan owner route aman.','06'],
+  ['Premium','Plan Free, Plus, Pro, Lifetime dan verifikasi manual owner.','07'],
+  ['Troubleshooting','Blank page, auth error, Supabase env, RLS, storage, deploy.','08']
 ]
 const faq = [
-  ['cara ubah background?', 'Buka Customize → Upload Background → pilih gambar → Save → cek profile publik.'],
-  ['cara tambah link Discord?', 'Buka Links → pilih Discord → isi URL → Add link → Save.'],
-  ['kenapa YouTube tidak autoplay?', 'External platform tidak boleh dipaksa autoplay. Pakai direct MP3/WAV/OGG/M4A untuk player dalam web.'],
-  ['profile /bekiw tidak muncul?', 'Pastikan username bekiw ada di Supabase profiles dan visibility public.'],
-  ['AI bekiw fallback?', 'Isi OPENAI_API_KEY dan OPENAI_MODEL di Supabase Edge Function Secrets kalau mau AI real.']
+  ['Kenapa YouTube tidak autoplay?', 'Platform luar seperti YouTube/Spotify tidak dipaksa autoplay. Pakai direct MP3/WAV/OGG/M4A untuk player di profile.'],
+  ['Cara ubah background?', 'Buka Customize, klik Choose Background, pilih file jpg/png/webp/gif, lalu Save.'],
+  ['Kenapa login gagal?', 'Cek Vercel env, Supabase URL/anon key, dan Authentication URL Configuration.'],
+  ['Cara agar profile muncul?', 'Pastikan username valid, visibility public, dan route /username tidak bentrok dengan route sistem.']
 ]
 
-export default function HelpCenter() {
-  const { t } = useTulusLanguage()
-  const [query, setQuery] = useState('')
-  const data = [...categories.map(([title, body])=>({ type:'Category', title, body })), ...faq.map(([title, body])=>({ type:'FAQ', title, body }))]
-  const results = useMemo(()=> data.filter((item)=>`${item.title} ${item.body}`.toLowerCase().includes(query.toLowerCase())), [query])
-  return (
-    <V7GlowBackground className="luxe-page luxe-help-page-clean">
-      <TulusNav />
-      <section className="luxe-help-hero-clean">
-        <p className="luxe-kicker">Help Center</p>
-        <h1>Tanya bekiw atau cari solusi cepat.</h1>
-        <p>Help Center dibuat ringkas dan jelas: profile, upload, music, links, premium, games, login, dan troubleshooting.</p>
-        <div className="luxe-help-search-clean"><input value={query} onChange={(e)=>setQuery(e.target.value)} placeholder={t('searchHelp') || 'Cari masalah kamu…'} /><PremiumButton>{t('search') || 'Search'}</PremiumButton></div>
-      </section>
-      <section className="luxe-help-layout-clean">
-        <main>
-          {query ? <section className="luxe-help-results-clean"><h2>Search results</h2>{results.length ? results.map((item)=><article key={`${item.type}-${item.title}`}><small>{item.type}</small><b>{item.title}</b><p>{item.body}</p></article>) : <EmptyState title="Belum ketemu" body="Coba keyword: music, upload, login, Discord, background, premium." />}</section> : <section className="luxe-help-category-grid">{categories.map(([title, body])=><button key={title} onClick={()=>setQuery(title)}><b>{title}</b><span>{body}</span></button>)}</section>}
-          <section className="luxe-faq-clean"><h2>Popular questions</h2>{faq.map(([title, body])=><details key={title}><summary>{title}</summary><p>{body}</p></details>)}</section>
-        </main>
-        <aside><BekiwAIChat /></aside>
-      </section>
-    </V7GlowBackground>
-  )
+export default function HelpCenter(){
+  const [query,setQuery]=useState('')
+  const filtered=useMemo(()=>categories.filter(([t,b])=>(t+b).toLowerCase().includes(query.toLowerCase())),[query])
+  return <main className="pro-page pro-help"><CleanNav/>
+    <section className="pro-help-hero"><p className="pro-kicker">Help Center</p><h1>Butuh bantuan? bekiw bantu dengan alur yang jelas.</h1><p>Cari artikel, cek quick fix, atau chat dengan AI bekiw untuk masalah profile, upload, login, music, deploy, dan premium.</p><div className="pro-search"><input value={query} onChange={(e)=>setQuery(e.target.value)} placeholder="Cari: upload background, music MP3, login, Supabase..."/><button>Search</button></div></section>
+    <section className="pro-help-layout"><main><div className="pro-help-grid">{filtered.map(([title,body,num])=><article className="pro-card" key={title}><span>{num}</span><h3>{title}</h3><p>{body}</p></article>)}</div><div className="pro-card pro-faq"><h2>Popular quick fixes</h2>{faq.map(([q,a])=><details key={q} open={query && q.toLowerCase().includes(query.toLowerCase())}><summary>{q}</summary><p>{a}</p></details>)}</div></main><aside className="pro-ai-panel"><BekiwAIChat /></aside></section>
+  </main>
 }
