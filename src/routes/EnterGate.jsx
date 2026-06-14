@@ -3,6 +3,7 @@ import ParticleLayer from '../components/ParticleLayer.jsx'
 import EnterScreen from '../components/EnterScreen.jsx'
 import { themeVars } from '../lib/themes.js'
 import { go } from '../lib/authFlow.js'
+import SpaceBackground from '../components/SpaceBackground.jsx'
 
 export default function EnterGate({ user, profile }) {
   if (!user) {
@@ -11,6 +12,7 @@ export default function EnterGate({ user, profile }) {
   }
   return (
     <main className="public-profile enter-gate-page" style={themeVars(profile.theme_name)}>
+      <SpaceBackground />
       <BackgroundLayer profile={profile} />
       <ParticleLayer enabled />
       <section className="welcome-back-card glass-card">

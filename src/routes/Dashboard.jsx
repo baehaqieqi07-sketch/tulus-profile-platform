@@ -18,6 +18,7 @@ import Billing from '../components/Billing.jsx'
 import LivePreview from '../components/LivePreview.jsx'
 import SecurityNotice from '../components/SecurityNotice.jsx'
 import UserGuard from '../components/UserGuard.jsx'
+import SpaceBackground from '../components/SpaceBackground.jsx'
 
 const menus = ['Quick Edit', 'Profile', 'Background', 'Avatar', 'Music', 'Links', 'Badges', 'Gallery', 'Quotes', 'Theme', 'Animation', 'Privacy', 'Premium', 'Billing', 'Advanced']
 
@@ -52,6 +53,7 @@ export default function Dashboard({ user, profile, setProfile, links, setLinks, 
 
   return (
     <UserGuard user={user}>
+      <SpaceBackground />
       <main className="dashboard-shell">
         <aside className="dashboard-sidebar glass-card">
           <a className="brand" href="/">TULUS</a>

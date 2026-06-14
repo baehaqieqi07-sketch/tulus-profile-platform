@@ -2,12 +2,15 @@ import { useState } from 'react'
 import { V7GlowBackground, V7Card } from '../components/V7Shell.jsx'
 import SignUpCard from '../components/auth/SignUpCard.jsx'
 import TulusLogo from '../components/TulusLogo.jsx'
+import SpaceBackground from '../components/SpaceBackground.jsx'
 
 export default function Register({ onLogin, onProfilePatch, profile }) {
   const [step, setStep] = useState('username')
   const [draftUsername, setDraftUsername] = useState(profile?.username || 'bekiw')
   return (
-    <V7GlowBackground className="v7-auth v500-auth">
+    <>
+      <SpaceBackground />
+      <V7GlowBackground className="v7-auth v500-auth">
       <V7Card className="v7-auth-card v500-login-card">
         <a className="v7-auth-logo" href="/"><TulusLogo compact /></a>
         {step === 'username' ? <>
@@ -21,5 +24,6 @@ export default function Register({ onLogin, onProfilePatch, profile }) {
         </>}
       </V7Card>
     </V7GlowBackground>
+    </>
   )
 }

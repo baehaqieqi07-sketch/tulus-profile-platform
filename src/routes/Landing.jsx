@@ -1,6 +1,7 @@
 import CleanNav from '../components/CleanNav.jsx'
 import TulusLogo from '../components/TulusLogo.jsx'
 import BrandIcon from '../components/BrandIcon.jsx'
+import SpaceBackground from '../components/SpaceBackground.jsx'
 
 const apps = ['discord','instagram','roblox','spotify','apple music','youtube','tiktok','github','telegram','soundcloud']
 const features = [
@@ -33,6 +34,7 @@ function HeroProfile() {
 export default function Landing() {
   return (
     <main className="pro-page pro-landing">
+      <SpaceBackground />
       <CleanNav />
       <section className="pro-hero">
         <div className="pro-hero-copy">

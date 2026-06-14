@@ -4,6 +4,7 @@ import MusicPlayer from '../components/MusicPlayer.jsx'
 import ViewCounter from '../components/ViewCounter.jsx'
 import SocialIconButton from '../components/SocialIconButton.jsx'
 import TulusLogo from '../components/TulusLogo.jsx'
+import SpaceBackground from '../components/SpaceBackground.jsx'
 
 export default function PublicProfile({ username, profile = {}, links = [], badges = [], quotes = [], gallery = [], incrementView }) {
   const [entered, setEntered] = useState(false)
@@ -13,6 +14,7 @@ export default function PublicProfile({ username, profile = {}, links = [], badg
   useEffect(() => { incrementView?.() }, [])
   return (
     <main className="pro-public" style={bg ? { '--profile-bg': `url(${bg})` } : undefined}>
+      <SpaceBackground />
       <div className="pro-public-bg" />
       <EnterScreen hidden={entered} onEnter={() => setEntered(true)} />
       <section className={`pro-profile-shell ${entered ? 'entered' : ''}`}>
